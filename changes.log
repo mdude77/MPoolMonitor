@@ -1,0 +1,55 @@
+v3.6
+- Fixed the problem with the scroll bars being offscreen for multipool and scryptguild
+- Fixed problem with it not remembering idle popups being turned off
+
+v3.5
+- Fixed a problem where a "N/A" return from Eligius for last block value would trigger an error
+- Changed all message box errors to notification bar messages, as message boxes stop all processing until the user clicks something
+- Made the annoying idle worker popup even more annoying by adding a regular PC beep to it (can disable via options)
+- Added support for LTC Rabbit
+- Fixed a problem with connection problems to Eligius not being handled and displayed properly
+- A few misc internal bug fixes, mostly around error handling
+
+v3.4
+- Put the proper BTC balance field for Slush in the top right (thanks SA!)
+- Fixed a problem with ScryptGuild throwing errors if your decimal setting is a comma ","
+- Fixed the problem with "Show worker data" and "Show balance data" not being on by default for ScryptGuild
+- Changed the one "average" entry for Eligius to be the 256 second entry instead of 3hr, as the average routine is also the one that feeds the "idle worker" logic
+
+v3.3
+- Did some visual rearranging, the pending BTC and NMC values are always in the top right beside the hash rate
+- Removed the row selector from the grids, as it served no purpose and took up space
+- Changed the app to be single instance, to prevent users from accidentally running it multiple times
+- Added a notification the first time it's closed to the notification tray
+- Fixed the hash rate indicators for Scryptguild.. was showing 1000x too high
+- Added luck indicators to Eligius.  All but the "last 10 blocks luck" require DB stats to be enabled (and working)
+- Added local idle worker alerts, in the form of a tooltip, an annoying popup, and/or email alerts (existing email functionality is unchanged)
+
+v3.2
+- added support for Eligius
+- changed the minimum refresh period to 5 minutes
+- added the BTC balance to the main screen for ScryptGuild when coin balances are enabled
+
+v3.1
+- more internal changes to make it easier to add more pools
+- upgraded to v6.0r1 of the JSON.net library to handle a parsing error that could occur with p2pool
+- added support for ScryptGuild
+- fixed a problem with BTC Guild payout info not being properly recorded to the database
+- added a "bad" column to the worker listing for BTC Guild indicating the percentage of non valid shares
+
+v3.0
+- added support for blockchain.info stats
+- lots of internal changes to make it easier to add more pools
+- fixed a minor problem with a parsing routine for Eclipse
+
+v2.9
+- fixed problem with it not autostarting when BTCGuild is only one enabled
+- 50btc works again.  apparently the API radically changed since I originally added support
+- removed the popup on new block found option.  it was only enabled for some pools, and no one seemed to notice, so I assume it's not used.
+- fixed problem with btcguild hash rate not showing on the tooltip icon
+- fixed problem with slush hash rate not showing on the tooltip icon
+- added support for multipool
+- fixed problem with BTCGuild hashrate showing 1000 times smaller than it is
+- added a Scrypt total hashrate separate from SHA256 total hashrate
+- added a checkbox to the p2pool config to indicate it's a Scrypt pool instead of a SHA256 pool
+- added the pending namecoin (NMC) stat to the BTCGuild output
