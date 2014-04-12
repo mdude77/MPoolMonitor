@@ -52,7 +52,7 @@ Public Class frmMain
         Public chkEnabled As CheckBox
     End Class
 
-    Private PoolData(0 To 25) As clsPoolData
+    Private PoolData(0 To 26) As clsPoolData
 
     Private Enum enPool
         f50btc = 0
@@ -81,6 +81,8 @@ Public Class frmMain
         ltcrabbit1 = 23
         ltcrabbit2 = 24
         ltcrabbit3 = 25
+        blockchaininfo2 = 26
+        blockchaininfo3 = 27
     End Enum
 
 #If DEBUG Then
@@ -252,6 +254,9 @@ Public Class frmMain
             'blockchain info
             .Add(Me.chkBlockChainInfoEnabled.Name, "Blockchain.infoEnabled")
             .Add(Me.cmbBlockChainInfoRefreshRate.Name, "Blockchain.InfoRefreshRate")
+            .Add(Me.txtBCIc_Blocksize.Name, "Blockchain.infoCalcBlockSize")
+            .Add(Me.txtBCIc_PeriodInDays.Name, "Blockchain.infoCalcPeriodInDays")
+            .Add(Me.txtBCIc_FeeDonation.Name, "Blockchain.infoCalcFeeDonation")
 
             'scryptguild
             .Add(Me.chkScryptGuildEnabled.Name, "ScryptGuildEnabled")
@@ -263,6 +268,8 @@ Public Class frmMain
             'eligius
             .Add(Me.chkEligiusEnabled.Name, "EligiusEnabled")
             .Add(Me.txtEligiusBTCAddress.Name, "EligiusBTCAddress")
+            .Add(Me.txtEligiusBTCAddy2.Name, "EligiusBTCAddy2")
+            .Add(Me.txtEligiusBTCAddy3.Name, "EligiusBTCAddy3")
 
             'ltcrabbit
             .Add(Me.chkLTCRabbitEnabled.Name, "LTCRabbitEnabled")
@@ -353,6 +360,9 @@ Public Class frmMain
             'blockchain.info
             Call SetControlByRegKey(key, Me.chkBlockChainInfoEnabled)
             Call SetControlByRegKey(key, Me.cmbBlockChainInfoRefreshRate)
+            Call SetControlByRegKey(key, Me.txtBCIc_Blocksize)
+            Call SetControlByRegKey(key, Me.txtBCIc_PeriodInDays)
+            Call SetControlByRegKey(key, Me.txtBCIc_FeeDonation)
 
             'scryptguild
             Call SetControlByRegKey(key, Me.chkScryptGuildEnabled)
@@ -364,6 +374,8 @@ Public Class frmMain
             'eligius
             Call SetControlByRegKey(key, Me.chkEligiusEnabled)
             Call SetControlByRegKey(key, Me.txtEligiusBTCAddress)
+            Call SetControlByRegKey(key, Me.txtEligiusBTCAddy2)
+            Call SetControlByRegKey(key, Me.txtEligiusBTCAddy3)
 
             'ltcrabbit
             Call SetControlByRegKey(key, Me.chkLTCRabbitEnabled)
@@ -528,6 +540,9 @@ Public Class frmMain
 
                         .chkEnabled = Me.chkBlockChainInfoEnabled
                         AddHandler .chkEnabled.CheckedChanged, AddressOf Me.TabEnabled_CheckedChanged
+
+                    Case enPool.blockchaininfo2, enPool.blockchaininfo3
+                        'do nothing
 
                     Case enPool.btcguild
                         .sPoolName = "BTC Guild"
@@ -1075,7 +1090,7 @@ Public Class frmMain
 
     'this is what does all the work
     'it's called asyncronously when the web call finishes
-    Private Sub ProcessJSON(ByVal sJSONText As String, ByVal CurrentPool As enPool)
+    Private Sub HandlePoolResponse(ByVal sJSONText As String, ByVal CurrentPool As enPool)
 
         Try
             If Me.chkConfigStoreDBStatistics.Checked = True Then
@@ -1118,8 +1133,8 @@ Public Class frmMain
                 Case enPool.multipool1
                     Call HandleMultipool(sJSONText)
 
-                Case enPool.blockchaininfo
-                    Call HandleBlockChainInfo(sJSONText)
+                Case enPool.blockchaininfo, enPool.blockchaininfo2, enPool.blockchaininfo3
+                    Call HandleBlockChainInfo(sJSONText, CurrentPool)
 
                 Case enPool.scryptguild1
                     Call HandleScryptGuild(sJSONText)
@@ -1198,7 +1213,7 @@ Public Class frmMain
 
                         pd.dScryptTotalHashRate = dHashRate
 
-                        Call ShowTotalHashRate()
+                        Call ShowTotalHashRate(False)
                     Catch ex As Exception When bErrorHandle = True
                         Me.txtLTCRabbitUserHash.Text = "PJ:API ERROR1"
 
@@ -1310,7 +1325,7 @@ Public Class frmMain
         Dim dr As DataRow
         Dim iShares As UInt64
         Dim pd As clsPoolData
-        Dim dHashTemp, dHashTotal As Double
+        Dim dTemp, dHashTemp, dHashTotal As Double
         Dim bDebugPoint As Byte
         Dim wc As System.Net.WebClient
         Dim PayoutQueue() As String
@@ -1318,8 +1333,20 @@ Public Class frmMain
         Dim sbTemp As System.Text.StringBuilder
         Dim cmAny As OleDb.OleDbCommand
         Dim iAverage, iActual As UInt32
+        Dim bRound1, bRound2, bRound3 As Boolean
+        Dim sTemp As String
 
         Try
+            pd = PoolData(enPool.eligius1)
+
+            If pd.oData1 Is Nothing Then
+                bRound1 = True
+            ElseIf pd.oData1 = Me.txtEligiusBTCAddy2.Text Then
+                bRound2 = True
+            ElseIf pd.oData1 = Me.txtEligiusBTCAddy3.Text Then
+                bRound3 = True
+            End If
+
             Select Case pool
                 Case enPool.eligius1    'user hashrate
                     Try
@@ -1329,15 +1356,23 @@ Public Class frmMain
 
                         bDebugPoint = 1
 
-                        pd = PoolData(enPool.eligius1)
-
-                        pd.ds.Tables(0).Clear()
+                        If bRound1 = True Then
+                            pd.ds.Tables(0).Clear()
+                        Else
+                            'add blank line
+                            dr = pd.ds.Tables(0).NewRow
+                            pd.ds.Tables(0).Rows.Add(dr)
+                        End If
 
                         For Each jp1 In j.Property("output").ToList
                             dr = pd.ds.Tables(0).NewRow
 
                             For Each jp2 In jp1.Property("av43200").ToList    '12 hours
-                                dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                If String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True Then
+                                    dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                Else
+                                    dr.Item("Worker") = jp1.Value(Of String)("username")
+                                End If
 
                                 dHashTemp = Double.Parse(jp2.Value(Of String)("numeric")) / 1000000    'uses raw hashrate, not in MH/s or KH/s
 
@@ -1358,7 +1393,11 @@ Public Class frmMain
                             dr = pd.ds.Tables(0).NewRow
 
                             For Each jp2 In jp1.Property("av10800").ToList    '3 hours
-                                dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                If String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True Then
+                                    dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                Else
+                                    dr.Item("Worker") = jp1.Value(Of String)("username")
+                                End If
 
                                 dHashTemp = Double.Parse(jp2.Value(Of String)("numeric")) / 1000000    'uses raw hashrate, not in MH/s or KH/s
 
@@ -1384,7 +1423,11 @@ Public Class frmMain
                             dr = pd.ds.Tables(0).NewRow
 
                             For Each jp2 In jp1.Property("av1350").ToList    '22.5 minutes
-                                dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                If String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True Then
+                                    dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                Else
+                                    dr.Item("Worker") = jp1.Value(Of String)("username")
+                                End If
 
                                 dHashTemp = Double.Parse(jp2.Value(Of String)("numeric")) / 1000000    'uses raw hashrate, not in MH/s or KH/s
 
@@ -1405,7 +1448,11 @@ Public Class frmMain
                             dr = pd.ds.Tables(0).NewRow
 
                             For Each jp2 In jp1.Property("av256").ToList    '256 seconds
-                                dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                If String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True Then
+                                    dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                Else
+                                    dr.Item("Worker") = jp1.Value(Of String)("username")
+                                End If
 
                                 dHashTemp = Double.Parse(jp2.Value(Of String)("numeric")) / 1000000    'uses raw hashrate, not in MH/s or KH/s
 
@@ -1426,7 +1473,11 @@ Public Class frmMain
                             dr = pd.ds.Tables(0).NewRow
 
                             For Each jp2 In jp1.Property("av128").ToList    '128 seconds
-                                dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                If String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True Then
+                                    dr.Item("Worker") = jp1.Value(Of String)("username").Replace(Me.txtEligiusBTCAddress.Text, "default")
+                                Else
+                                    dr.Item("Worker") = jp1.Value(Of String)("username")
+                                End If
 
                                 dHashTemp = Double.Parse(jp2.Value(Of String)("numeric")) / 1000000    'uses raw hashrate, not in MH/s or KH/s
 
@@ -1446,19 +1497,33 @@ Public Class frmMain
                         Next
 
                         If Me.chkConfigStoreDBStatistics.Checked = True AndAlso pd.dLastShareTime <> #12:00:00 AM# AndAlso iShares <> pd.iYourTotalShares Then
-                            cmShareCounts.Parameters("@pool").Value = pd.sPoolName & ": " & "3 hours"
-                            cmShareCounts.Parameters("@Shares").Value = iShares - pd.iYourTotalShares
-                            cmShareCounts.Parameters("@DurationInSeconds").Value = (Now - pd.dLastShareTime).TotalSeconds
-                            cmShareCounts.ExecuteNonQuery()
+                            If bRound1 = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True OrElse _
+                                bRound2 = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True OrElse bRound3 = True Then
+
+                                cmShareCounts.Parameters("@pool").Value = pd.sPoolName & ": " & "3 hours"
+                                cmShareCounts.Parameters("@Shares").Value = iShares - pd.iYourTotalShares
+                                cmShareCounts.Parameters("@DurationInSeconds").Value = (Now - pd.dLastShareTime).TotalSeconds
+                                cmShareCounts.ExecuteNonQuery()
+                            End If
                         End If
 
-                        pd.iYourTotalShares = iShares
+                        If bRound1 = True Then
+                            pd.iYourTotalShares = iShares
+                        Else
+                            pd.iYourTotalShares += iShares
+                        End If
+
                         pd.dLastShareTime = Now
 
-                        Me.txtEligiusUserHash.Text = FormatHashRate(dHashTotal)
-                        pd.dSHA256TotalHashRate = dHashTotal
+                        If bRound1 = True Then
+                            pd.dSHA256TotalHashRate = dHashTotal
+                        Else
+                            pd.dSHA256TotalHashRate += dHashTotal
+                        End If
 
-                        Call ShowTotalHashRate()
+                        Me.txtEligiusUserHash.Text = FormatHashRate(pd.dSHA256TotalHashRate)
+
+                        Call ShowTotalHashRate(False)
                         Call CheckForIdleWorkers(pd)
 
                     Catch ex As Exception When bErrorHandle = True
@@ -1467,10 +1532,25 @@ Public Class frmMain
                         Me.ToolTip1.SetToolTip(Me.txtEligiusUserHash, "An error occurred when processing the output from this pool.  DBP=" & bDebugPoint & ".  This could indicate a problem with this application, or with the pool.")
                     End Try
 
-                    'this way if pt1 errors out, we try pt2 anyhow
-                    wc = New System.Net.WebClient
-                    AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
-                    wc.DownloadStringAsync(New System.Uri("http://eligius.st/~wizkid057/newstats/api.php?cmd=gethashrate"), enPool.eligius2)
+                    'this way if pt1 errors out, we can try another part anyhow
+                    If bRound1 = True Then
+                        'pool hashrate -- only necessary on round1
+                        wc = New System.Net.WebClient
+                        AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                        wc.DownloadStringAsync(New System.Uri("http://eligius.st/~wizkid057/newstats/api.php?cmd=gethashrate"), enPool.eligius2)
+                    Else
+                        If bRound2 = True Then
+                            wc = New System.Net.WebClient
+                            AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                            wc.DownloadStringAsync(New System.Uri("http://eligius.st/~wizkid057/newstats/api.php?cmd=getuserstat&username=" & Me.txtEligiusBTCAddy2.Text), enPool.eligius3)
+                        End If
+
+                        If bRound3 = True Then
+                            wc = New System.Net.WebClient
+                            AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                            wc.DownloadStringAsync(New System.Uri("http://eligius.st/~wizkid057/newstats/api.php?cmd=getuserstat&username=" & Me.txtEligiusBTCAddy3.Text), enPool.eligius3)
+                        End If
+                    End If
 
                 Case enPool.eligius2    'pool hashrate
                     Try
@@ -1479,8 +1559,6 @@ Public Class frmMain
                         Debug.Print("Eligius2: " & sJSONText)
 
                         bDebugPoint = 1
-
-                        pd = PoolData(enPool.eligius1)
 
                         For Each jp1 In j.Property("output").ToList
                             For Each jp2 In jp1.Property("av256").ToList    '256 seconds
@@ -1514,30 +1592,72 @@ Public Class frmMain
 
                         bDebugPoint = 1
 
-                        pd = PoolData(enPool.eligius1)
-
                         For Each jp1 In j.Property("output").ToList
                             If jp1.Value(Of String)("lbal") <> "N/A" Then
-                                Me.txtEligiusBalanceLastBlock.Text = Format(jp1.Value(Of Double)("lbal") / 100000000, "###,##0.##########")
+                                dTemp = jp1.Value(Of Double)("lbal") / 100000000
+
+                                If bRound1 = True Then
+                                    Me.txtEligiusBalanceLastBlock.Text = Format(dTemp, "###,##0.##########")
+
+                                    pd.oData2 = dTemp
+
+                                    Me.ToolTip1.SetToolTip(Me.txtEligiusBalanceLastBlock, "1: " & Me.txtEligiusBalanceLastBlock.Text)
+                                Else
+                                    Me.txtEligiusBalanceLastBlock.Text = Format(dTemp + pd.oData2, "###,##0.##########")
+
+                                    pd.oData2 += dTemp
+
+                                    sTemp = Me.ToolTip1.GetToolTip(Me.txtEligiusBalanceLastBlock)
+
+                                    If bRound2 = True Then
+                                        Me.ToolTip1.SetToolTip(Me.txtEligiusBalanceLastBlock, sTemp & vbCrLf & "2: " & Format(dTemp, "###,##0.##########"))
+                                    Else
+                                        Me.ToolTip1.SetToolTip(Me.txtEligiusBalanceLastBlock, sTemp & vbCrLf & "3: " & Format(dTemp, "###,##0.##########"))
+                                    End If
+                                End If
                             Else
                                 Me.txtEligiusBalanceLastBlock.Text = "N/A"
                             End If
 
-                            Me.txtEligiusEstimatedBalance.Text = Format(jp1.Value(Of Double)("bal") / 100000000, "###,##0.##########")
+                            dTemp = jp1.Value(Of Double)("bal") / 100000000
+
+                            If bRound1 = True Then
+                                Me.txtEligiusEstimatedBalance.Text = Format(dTemp, "###,##0.##########")
+
+                                pd.oData3 = dTemp
+
+                                Me.ToolTip1.SetToolTip(Me.txtEligiusEstimatedBalance, "1: " & Me.txtEligiusEstimatedBalance.Text)
+                            Else
+                                Me.txtEligiusEstimatedBalance.Text = Format(dTemp + pd.oData3, "###,##0.##########")
+
+                                pd.oData3 += dTemp
+
+                                sTemp = Me.ToolTip1.GetToolTip(Me.txtEligiusEstimatedBalance)
+
+                                If bRound2 = True Then
+                                    Me.ToolTip1.SetToolTip(Me.txtEligiusEstimatedBalance, sTemp & vbCrLf & "2: " & Format(dTemp, "###,##0.##########"))
+                                Else
+                                    Me.ToolTip1.SetToolTip(Me.txtEligiusEstimatedBalance, sTemp & vbCrLf & "3: " & Format(dTemp, "###,##0.##########"))
+                                End If
+                            End If
 
                             If Me.chkConfigStoreDBStatistics.Checked = True Then
-                                cmPayout.Parameters("@pool").Value = pd.sPoolName
+                                If bRound1 = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True Or _
+                                    bRound2 = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True OrElse bRound3 = True Then
 
-                                If jp1.Value(Of String)("lbal") <> "N/A" Then
-                                    cmPayout.Parameters("@ConfirmedBTC").Value = jp1.Value(Of Double)("lbal") / 100000000
-                                Else
-                                    cmPayout.Parameters("@ConfirmedBTC").Value = DBNull.Value
+                                    cmPayout.Parameters("@pool").Value = pd.sPoolName
+
+                                    If jp1.Value(Of String)("lbal") <> "N/A" Then
+                                        cmPayout.Parameters("@ConfirmedBTC").Value = pd.oData2
+                                    Else
+                                        cmPayout.Parameters("@ConfirmedBTC").Value = DBNull.Value
+                                    End If
+
+                                    cmPayout.Parameters("@UnconfirmedBTC").Value = DBNull.Value
+                                    cmPayout.Parameters("@EstimatedBTC").Value = pd.oData3
+                                    cmPayout.Parameters("@PaidBTC").Value = jp1.Value(Of Double)("everpaid") / 100000000
+                                    cmPayout.ExecuteNonQuery()
                                 End If
-
-                                cmPayout.Parameters("@UnconfirmedBTC").Value = DBNull.Value
-                                cmPayout.Parameters("@EstimatedBTC").Value = jp1.Value(Of Double)("bal") / 100000000
-                                cmPayout.Parameters("@PaidBTC").Value = jp1.Value(Of Double)("everpaid") / 100000000
-                                cmPayout.ExecuteNonQuery()
                             End If
                         Next
                     Catch ex As Exception When bErrorHandle = True
@@ -1546,9 +1666,41 @@ Public Class frmMain
                         Me.ToolTip1.SetToolTip(Me.txtEligiusUserHash, "An error occurred when processing the output from this pool.  DBP=" & bDebugPoint & ".  This could indicate a problem with this application, or with the pool.")
                     End Try
 
-                    wc = New System.Net.WebClient
-                    AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
-                    wc.DownloadStringAsync(New System.Uri("http://eligius.st/~luke-jr/raw/7/payout_queue.txt"), enPool.eligius4)
+                    If bRound1 = True Then
+                        wc = New System.Net.WebClient
+                        AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                        wc.DownloadStringAsync(New System.Uri("http://eligius.st/~luke-jr/raw/7/payout_queue.txt"), enPool.eligius4)
+                    End If
+
+                    If bRound1 = True Then
+                        If String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = False Then
+                            'start round2
+                            pd.oData1 = Me.txtEligiusBTCAddy2.Text
+
+                            wc = New System.Net.WebClient
+                            AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                            wc.DownloadStringAsync(New System.Uri("http://eligius.st/~wizkid057/newstats/api.php?cmd=gethashrate&username=" & Me.txtEligiusBTCAddy2.Text), enPool.eligius1)
+                        Else
+                            pd.oData1 = Nothing
+                        End If
+                    End If
+
+                    If bRound2 = True Then
+                        If String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = False Then
+                            'start round3
+                            pd.oData1 = Me.txtEligiusBTCAddy3.Text
+
+                            wc = New System.Net.WebClient
+                            AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                            wc.DownloadStringAsync(New System.Uri("http://eligius.st/~wizkid057/newstats/api.php?cmd=gethashrate&username=" & Me.txtEligiusBTCAddy3.Text), enPool.eligius1)
+                        Else
+                            pd.oData1 = Nothing
+                        End If
+                    End If
+
+                    If bRound3 = True Then
+                        pd.oData1 = Nothing
+                    End If
 
                 Case enPool.eligius4    'payout queue
                     Try
@@ -1567,11 +1719,43 @@ Public Class frmMain
                                 If PayoutQueue(x) = Me.txtEligiusBTCAddress.Text Then
                                     If sbTemp.Length <> 0 Then
                                         sbTemp.Append(", ")
+                                    Else
+                                        sbTemp.Append("1: ")
                                     End If
 
                                     sbTemp.Append(x + 1)
                                 End If
                             Next
+
+                            If String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = False Then
+                                For x = 0 To PayoutQueue.Count - 1
+                                    If PayoutQueue(x) = Me.txtEligiusBTCAddy2.Text Then
+                                        If sbTemp.Length <> 0 Then
+                                            sbTemp.Append(", ")
+                                        Else
+                                            sbTemp.Append("/2: ")
+                                        End If
+
+                                        sbTemp.Append(x + 1)
+                                    End If
+                                Next
+                            End If
+
+
+
+                            If String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = False Then
+                                For x = 0 To PayoutQueue.Count - 1
+                                    If PayoutQueue(x) = Me.txtEligiusBTCAddy3.Text Then
+                                        If sbTemp.Length <> 0 Then
+                                            sbTemp.Append(", ")
+                                        Else
+                                            sbTemp.Append("/3: ")
+                                        End If
+
+                                        sbTemp.Append(x + 1)
+                                    End If
+                                Next
+                            End If
 
                             If sbTemp.Length = 0 Then
                                 Me.txtEligiusPayoutQueuePositions.Text = "not found"
@@ -1593,8 +1777,6 @@ Public Class frmMain
                         j = Newtonsoft.Json.Linq.JObject.Parse(sJSONText)
 
                         Debug.Print("Eligius5: " & sJSONText)
-
-                        pd = PoolData(enPool.eligius1)
 
                         'difficulty * 2^32 / hashrate
                         For Each jp1 In j.Property("output").ToList
@@ -1820,7 +2002,7 @@ Public Class frmMain
             pd.iYourTotalShares = iShares
             pd.dLastShareTime = Now
 
-            Call ShowTotalHashRate()
+            Call ShowTotalHashRate(False)
             Call CheckForIdleWorkers(pd)
 
             Me.ToolTip1.SetToolTip(Me.txt50UserHashRate, "As of " & Now.ToString)
@@ -2049,7 +2231,7 @@ Public Class frmMain
 
                     pd.ds.Tables(0).Rows.Add(dr)
 
-                    Call ShowTotalHashRate()
+                    Call ShowTotalHashRate(False)
                     Call CheckForIdleWorkers(pd)
 
                     Me.ToolTip1.SetToolTip(Me.txtEclUserHashRate, "As of " & Now.ToString)
@@ -2237,7 +2419,7 @@ Public Class frmMain
 
             pd.ds.Tables(0).Rows.Add(dr)
 
-            Call ShowTotalHashRate()
+            Call ShowTotalHashRate(False)
             Call CheckForIdleWorkers(pd)
 
             Me.ToolTip1.SetToolTip(Me.txtOzUserHashRate, "As of " & Now.ToString)
@@ -2370,7 +2552,7 @@ Public Class frmMain
                         Me.txtP2PIdealPayout.Text = Format(DirectCast(pd.oData1, Double), "0.######")
                     End If
 
-                    Call ShowTotalHashRate()
+                    Call ShowTotalHashRate(False)
                     Call CheckForIdleWorkers(pd)
 
                     pd.oData2 = Nothing
@@ -2612,7 +2794,7 @@ Public Class frmMain
                     pd.dLastShareTime = Now
                     pd.iYourTotalShares = iShares
 
-                    Call ShowTotalHashRate()
+                    Call ShowTotalHashRate(False)
                     Call CheckForIdleWorkers(pd)
 
                 Case enPool.bitminter2      'pool stats
@@ -2707,9 +2889,22 @@ Public Class frmMain
                 Exit Sub
             End If
 
+            Debug.Print("BTCGuild: " & Now.ToString)
+
             If sJSONText.ToLower.Contains("you have made too many api requests recently") = True Then
                 Me.txtBTCGuildUserHash.Text = "15 SECONDS"
                 Me.ToolTip1.SetToolTip(Me.txtBTCGuildUserHash, "API calls for BTC Guild are limited to once every 15 seconds.")
+
+                Debug.Print("15 seconds")
+
+                Exit Sub
+            End If
+
+            If sJSONText = "Failed to connect to BTC Guild database.  Please try again later." Then
+                Me.txtBTCGuildUserHash.Text = "BTCG ERROR"
+                Me.ToolTip1.SetToolTip(Me.txtBTCGuildUserHash, sJSONText)
+
+                Debug.Print("15 seconds")
 
                 Exit Sub
             End If
@@ -2832,7 +3027,7 @@ Public Class frmMain
             Me.txtBTCGuildUserHash.Text = FormatHashRate(dHashRate)
             pd.dSHA256TotalHashRate = dHashRate
 
-            Call ShowTotalHashRate()
+            Call ShowTotalHashRate(False)
             Call CheckForIdleWorkers(pd)
 
             Me.ToolTip1.SetToolTip(Me.txtBTCGuildUserHash, "As of " & Now.ToString)
@@ -3026,7 +3221,7 @@ Public Class frmMain
             Me.txtScryptGuildUserHash.Text = FormatHashRate(dHashRate)
             pd.dScryptTotalHashRate = dHashRate
 
-            Call ShowTotalHashRate()
+            Call ShowTotalHashRate(False)
             Call CheckForIdleWorkers(pd)
 
             Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "As of " & Now.ToString)
@@ -3131,7 +3326,7 @@ Public Class frmMain
                 cmHashRates.ExecuteNonQuery()
             End If
 
-            Call ShowTotalHashRate()
+            Call ShowTotalHashRate(False)
             Call CheckForIdleWorkers(pd)
 
             Me.ToolTip1.SetToolTip(Me.txtSlushUserHash, "As of " & Now.ToString)
@@ -3266,7 +3461,7 @@ Public Class frmMain
                 Me.txtMultipoolUserHashRate.Text = "SHA " & FormatHashRate(pd.dSHA256TotalHashRate) & " - Scr " & FormatHashRate(pd.dScryptTotalHashRate)
             End If
 
-            Call ShowTotalHashRate()
+            Call ShowTotalHashRate(False)
             Call CheckForIdleWorkers(pd)
 
             Me.ToolTip1.SetToolTip(Me.txtMultipoolUserHashRate, "As of " & Now.ToString)
@@ -3277,30 +3472,120 @@ Public Class frmMain
         End Try
     End Sub
 
-    Private Sub HandleBlockChainInfo(ByVal sJSONText As String)
+    Private Sub HandleBlockChainInfo(ByVal sJSONText As String, ByVal pool As enPool)
 
-        Dim j As Newtonsoft.Json.Linq.JObject
+        Dim j, j2 As Newtonsoft.Json.Linq.JObject
         Dim bDebugPoint As Byte
+        Dim wc As System.Net.WebClient
+        Static iBlocksSinceLastChange As Integer
+        Static iBlockChangeTime As UInt32
+        Static iBlockHeight As Integer
+        Dim dbRatio As Double
 
         Try
-            j = Newtonsoft.Json.Linq.JObject.Parse(sJSONText)
+            Select Case pool
+                Case enPool.blockchaininfo
+                    Try
+                        j = Newtonsoft.Json.Linq.JObject.Parse(sJSONText)
 
-            Debug.Print("Blockchain.info: " & sJSONText)
+                        Debug.Print("Blockchain.info1: " & sJSONText)
 
-            bDebugPoint = 1
+                        bDebugPoint = 1
 
-            Me.txtBCI_AsOfTimestamp.Text = Format(Now, "MM/dd/yyyy HH:mm:ss")
-            Me.txtBCI_Difficulty.Text = Format(j.Value(Of Double)("difficulty"), "###,###,###,###,###,###.##")
-            Me.txtBCI_MarketPriceUSD.Text = Format(j.Value(Of Double)("market_price_usd"), "$###,###,###,###.##")
-            Me.txtBCI_MinsBetweenBlocks.Text = Format(j.Value(Of Double)("minutes_between_blocks"), "##0.######")
-            Me.txtBCI_NetworkHashRate.Text = FormatHashRate(j.Value(Of Double)("hash_rate") * 1000)
-            Me.txtBCI_NextDifficultyChangeBlocks.Text = j.Value(Of Integer)("nextretarget") - j.Value(Of Integer)("n_blocks_total")
-            Me.txtBCI_NextDifficultyChangeTime.Text = Format(Now.AddMinutes((j.Value(Of Integer)("nextretarget") - j.Value(Of Integer)("n_blocks_total")) * j.Value(Of Double)("minutes_between_blocks")), "MM/dd/yyyy HH:mm:ss")
-            Me.txtBCI_EstimatedNextDifficulty.Text = Format(10 / j.Value(Of Double)("minutes_between_blocks") * j.Value(Of Double)("difficulty") * 1000, "###,###,###,###,###,###.##") & " (" & Format((1 - j.Value(Of Double)("minutes_between_blocks") / 10), "##0.#%") & ")"
+                        Me.txtBCI_AsOfTimestamp.Text = Format(Now, "MM/dd/yyyy HH:mm:ss")
+                        Me.txtBCI_Difficulty.Text = Format(j.Value(Of Double)("difficulty"), "###,###,###,###,###,###.##")
+                        Me.txtBCI_MarketPriceUSD.Text = Format(j.Value(Of Double)("market_price_usd"), "$###,###,###,###.##")
+                        'Me.txtBCI_MinsBetweenBlocks.Text = Format(j.Value(Of Double)("minutes_between_blocks"), "##0.######")
+                        Me.txtBCI_NetworkHashRate.Text = FormatHashRate(j.Value(Of Double)("hash_rate") * 1000)
+                        Me.txtBCI_NextDifficultyChangeBlocks.Text = j.Value(Of Integer)("nextretarget") - j.Value(Of Integer)("n_blocks_total")
+                        'Me.txtBCI_NextDifficultyChangeTime.Text = Format(Now.AddMinutes((j.Value(Of Integer)("nextretarget") - j.Value(Of Integer)("n_blocks_total")) * j.Value(Of Double)("minutes_between_blocks")), "MM/dd/yyyy HH:mm:ss")
+                        'Me.txtBCI_EstimatedNextDifficulty.Text = Format(10 / j.Value(Of Double)("minutes_between_blocks") * j.Value(Of Double)("difficulty") * 1000, "###,###,###,###,###,###.##") & " (" & Format((1 - j.Value(Of Double)("minutes_between_blocks") / 10), "##0.#%") & ")"
+
+                        iBlocksSinceLastChange = j.Value(Of Integer)("n_blocks_total") - (j.Value(Of Integer)("nextretarget") - 2016)
+                        iBlockHeight = j.Value(Of Integer)("n_blocks_total")
+
+                        'get the block info of last block in last difficulty
+                        'use the timestamp to figure out how regularly blocks are being found to calculate the next difficulty change
+                        wc = New System.Net.WebClient
+                        AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                        wc.DownloadStringAsync(New System.Uri("https://blockchain.info/block-height/" & j.Value(Of Integer)("nextretarget") - 2016 & "?format=json"), enPool.blockchaininfo2)
+
+                    Catch ex As Exception When bErrorHandle = True
+                        Me.txtBCI_AsOfTimestamp.Text = "PJ:API ERROR1"
+
+                        Me.ToolTip1.SetToolTip(Me.txtBCI_AsOfTimestamp, "An error occurred when processing the output from Blockchain.info.  PDB=" & bDebugPoint & ". This could indicate a problem with this application, or with the data source.")
+                    End Try
+
+                Case enPool.blockchaininfo2
+                    Try
+                        j = Newtonsoft.Json.Linq.JObject.Parse(sJSONText)
+
+                        Debug.Print("Blockchain.info2: " & sJSONText)
+
+                        bDebugPoint = 1
+
+                        For Each ja In j.Property("blocks").ToList
+                            For Each j2 In ja
+                                iBlockChangeTime = j2.Value(Of UInt32)("time")
+                            Next
+                        Next
+
+                        wc = New System.Net.WebClient
+                        AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                        wc.DownloadStringAsync(New System.Uri("https://blockchain.info/block-height/" & iBlockHeight & "?format=json"), enPool.blockchaininfo3)
+                    Catch ex As Exception When bErrorHandle = True
+                        Me.txtBCI_AsOfTimestamp.Text = "PJ:API ERROR2"
+
+                        Me.ToolTip1.SetToolTip(Me.txtBCI_AsOfTimestamp, "An error occurred when processing the output from Blockchain.info.  PDB=" & bDebugPoint & ". This could indicate a problem with this application, or with the data source.")
+                    End Try
+
+                Case enPool.blockchaininfo3
+                    Try
+                        j = Newtonsoft.Json.Linq.JObject.Parse(sJSONText)
+
+                        Debug.Print("Blockchain.info2: " & sJSONText)
+
+                        bDebugPoint = 1
+
+                        For Each ja In j.Property("blocks").ToList
+                            For Each j2 In ja
+                                Me.txtBCI_MinsBetweenBlocks.Text = Format((j2.Value(Of UInt32)("time") - iBlockChangeTime) / 60 / iBlocksSinceLastChange, "##.##")
+
+                                'supposed to be 10 mins between blocks
+                                dbRatio = 10 / ((j2.Value(Of UInt32)("time") - iBlockChangeTime) / 60 / iBlocksSinceLastChange)
+
+                                Me.txtBCI_EstimatedNextDifficulty.Text = Format(dbRatio * Double.Parse(Me.txtBCI_Difficulty.Text), "###,###,###,###,###,###.##") & " (" & _
+                                    Format(dbRatio / 100, "##0.#%") & ")"
+
+                                Me.txtBCI_NextDifficultyChangeTime.Text = Format(Now.AddMinutes(Integer.Parse(Me.txtBCI_NextDifficultyChangeBlocks.Text) * Double.Parse(Me.txtBCI_MinsBetweenBlocks.Text)), "MM/dd/yyyy HH:mm:ss")
+                            Next
+                        Next
+
+                        iBlocksSinceLastChange = 0
+                        iBlockChangeTime = 0
+                        iBlockHeight = 0
+                    Catch ex As Exception When bErrorHandle = True
+                        Me.txtBCI_AsOfTimestamp.Text = "PJ:API ERROR3"
+
+                        Me.ToolTip1.SetToolTip(Me.txtBCI_AsOfTimestamp, "An error occurred when processing the output from Blockchain.info.  PDB=" & bDebugPoint & ". This could indicate a problem with this application, or with the data source.")
+                    End Try
+
+            End Select
+            
         Catch ex As Exception When bErrorHandle = True
-            Me.txtBCI_AsOfTimestamp.Text = "PJ:API ERROR"
+            Select Case pool
+                Case enPool.blockchaininfo
+                    Me.txtBCI_AsOfTimestamp.Text = "PJ:API ERROR1"
 
-            Me.ToolTip1.SetToolTip(Me.txtBCI_AsOfTimestamp, "An error occurred when processing the output from Blockchain.info.  PDB=" & bDebugPoint & ". This could indicate a problem with this application, or with the pool.")
+                Case enPool.blockchaininfo2
+                    Me.txtBCI_AsOfTimestamp.Text = "PJ:API ERROR2"
+
+                Case enPool.blockchaininfo3
+                    Me.txtBCI_AsOfTimestamp.Text = "PJ:API ERROR3"
+
+            End Select
+
+            Me.ToolTip1.SetToolTip(Me.txtBCI_AsOfTimestamp, "An error occurred when processing the output from Blockchain.info.  PDB=x" & bDebugPoint & ". This could indicate a problem with this application, or with the data source.")
         End Try
 
     End Sub
@@ -3318,7 +3603,7 @@ Public Class frmMain
 
     End Function
 
-    Private Sub ShowTotalHashRate()
+    Private Sub ShowTotalHashRate(ByVal bByButton As Boolean)
 
         Dim dScryptTotal, dSHA256Total As Double
 
@@ -3336,6 +3621,92 @@ Public Class frmMain
         ElseIf dScryptTotal <> 0 AndAlso dSHA256Total <> 0 Then
             Me.txtTotalHash.Text = "SHA " & FormatHashRate(dSHA256Total) & " - Scr " & FormatHashRate(dScryptTotal)
         End If
+
+        Call ShowBTCPerDay(bByButton, dSHA256Total)
+
+    End Sub
+
+    Private Sub ShowBTCPerDay(ByVal bByButton As Boolean, dSHA256Total As Double)
+
+        Dim sTemp As String
+        Dim dTemp As Double
+
+        Try
+            If ValidatePool(enPool.blockchaininfo) = True AndAlso String.IsNullOrEmpty(Me.txtBCI_Difficulty.Text) = False Then
+                'set defaults if not there
+                Me.txtBCIc_Difficulty.Text = Me.txtBCI_Difficulty.Text
+
+                sTemp = FormatHashRate(dSHA256Total)
+
+                If sTemp = "ZERO" Then Exit Sub
+
+                Me.txtBCIc_Hashrate.Text = sTemp.Substring(0, sTemp.Length - 5)
+                Me.cmbBCIc_HashRate.Text = sTemp.Substring(sTemp.Length - 4)
+
+                If String.IsNullOrEmpty(Me.txtBCIc_FeeDonation.Text) = True Then
+                    Me.txtBCIc_FeeDonation.Text = "1"
+                End If
+
+                If String.IsNullOrEmpty(Me.txtBCIc_PeriodInDays.Text) = True Then
+                    Me.txtBCIc_PeriodInDays.Text = "1"
+                End If
+
+                If String.IsNullOrEmpty(Me.txtBCIc_Blocksize.Text) = True Then
+                    Me.txtBCIc_Blocksize.Text = "25"
+                End If
+
+                Me.txtBCIc_MarketPrice.Text = Me.txtBCI_MarketPriceUSD.Text
+
+                If Me.cmbBCIc_HashRate.Text = "BFH/s" Then
+                    Me.txtBCIc_BTCGenerated.Text = "an ungodly qty of"
+                Else
+                    dTemp = 1000 * Double.Parse(Me.txtBCIc_Blocksize.Text) * 25 * 3600 / (2 ^ 48 / 65535) / Double.Parse(Me.txtBCIc_Difficulty.Text)
+
+                    If Me.txtBCIc_Hashrate.Text = sTemp.Substring(0, sTemp.Length - 5) AndAlso Me.cmbBCIc_HashRate.Text = sTemp.Substring(sTemp.Length - 4) Then
+                        dTemp *= dSHA256Total * 1000
+                    Else
+                        Select Case Me.cmbBCIc_HashRate.Text
+                            Case "MH/s"
+                                dTemp *= Double.Parse(Me.txtBCIc_Hashrate.Text) * 1000
+
+                            Case "GH/s"
+                                dTemp *= Double.Parse(Me.txtBCIc_Hashrate.Text) * 1000000
+
+                            Case "TH/s"
+                                dTemp *= Double.Parse(Me.txtBCIc_Hashrate.Text) * 1000000000
+
+                            Case "PH/s"
+                                dTemp *= Double.Parse(Me.txtBCIc_Hashrate.Text) * 1000000000000
+
+                            Case "EH/s"
+                                dTemp *= Double.Parse(Me.txtBCIc_Hashrate.Text) * 1000000000000000
+
+                            Case "ZH/s"
+                                dTemp *= Double.Parse(Me.txtBCIc_Hashrate.Text) * 1000000000000000000
+
+                        End Select
+                    End If
+
+                    dTemp *= Integer.Parse(Me.txtBCIc_PeriodInDays.Text)
+
+                    'minus fee/donation
+                    dTemp -= dTemp * Double.Parse(Me.txtBCIc_FeeDonation.Text) / 100
+
+                    Me.txtBCIc_BTCGenerated.Text = Format(dTemp, "###,##0.############")
+
+                    Me.txtBCIc_DollarValue.Text = Format(dTemp * Double.Parse(Me.txtBCIc_MarketPrice.Text.Replace("$", "").Replace(",", "")), "$###,###,###,##0.##")
+
+                    'got this far with no errors, save filled in fields if requested
+                    If bByButton = True Then
+                        Call SetRegKeyByControl(Me.txtBCIc_Blocksize)
+                        Call SetRegKeyByControl(Me.txtBCIc_PeriodInDays)
+                        Call SetRegKeyByControl(Me.txtBCIc_FeeDonation)
+                    End If
+                End If
+            End If
+        Catch ex As Exception When bErrorHandle = True
+            Me.txtBCIc_BTCGenerated.Text = "ERROR (check inputs): " & ex.Message
+        End Try
 
     End Sub
 
@@ -3652,6 +4023,8 @@ Public Class frmMain
             'eligius
             Call SetRegKeyByControl(Me.chkEligiusEnabled)
             Call SetRegKeyByControl(Me.txtEligiusBTCAddress)
+            Call SetRegKeyByControl(Me.txtEligiusBTCAddy2)
+            Call SetRegKeyByControl(Me.txtEligiusBTCAddy3)
 
             'ltcrabbit
             Call SetRegKeyByControl(Me.chkLTCRabbitEnabled)
@@ -3904,7 +4277,7 @@ Public Class frmMain
 
         If e.Cancelled = False Then
             If e.Error Is Nothing Then
-                Call ProcessJSON(e.Result, CurrentPool)
+                Call HandlePoolResponse(e.Result, CurrentPool)
             Else
                 Debug.Print(e.Error.Message)
 
@@ -4384,6 +4757,28 @@ Public Class frmMain
     Private Sub chkIdlePopup_CheckedChanged(sender As Object, e As System.EventArgs) Handles chkIdlePopup.CheckedChanged
 
         Me.chkIdleWorkPopUpWithBeeps.Visible = Me.chkIdlePopup.Checked
+
+    End Sub
+
+    Private Sub cmbBCIc_HashRate_KeyPress(sender As Object, e As System.Windows.Forms.KeyPressEventArgs) Handles cmbBCIc_HashRate.KeyPress
+
+        e.Handled = True
+
+    End Sub
+
+    Private Sub cmdBCIc_CalcSave_Click(sender As Object, e As System.EventArgs) Handles cmdBCIc_CalcSave.Click
+
+        Call ShowTotalHashRate(True)
+
+    End Sub
+
+    Private Sub txtBCIc_PeriodInDays_TextChanged(sender As System.Object, e As System.EventArgs) Handles txtBCIc_PeriodInDays.TextChanged
+
+        If Val(Me.txtBCIc_PeriodInDays.Text) > 1 Then
+            Me.lblBCIc_Days.Text = "days, assuming"
+        Else
+            Me.lblBCIc_Days.Text = "day, assuming"
+        End If
 
     End Sub
 End Class

@@ -5,13 +5,12 @@ General
 - The Avg hashrate listed for workers is the average of the last 60 readings for that worker.  
 - It can store statistics in a local MS Access database.  Right now, if enabled, it stores worker hash rates, pool hash rate, your total hash rate, and share counts per refresh interval.  This is an Access 2007 DB, so if you aren't Access savvy, this won't mean anything to you.  With enough demand, I can make this exportable from the app in a .CSV file for your use.
 - It can auto refresh every 5 minutes up to every 60 minutes, and/or refresh on demand.
-- There isn't anything more to this than meets the eye.  It doesn't "dial home" or look for wallets.  It does what it says, and nothing more.  That said...
-- I intend to post the code to GitHub once I figure out how to use it. :)  In the meantime, if someone would like a copy for their perusal and local use (not distribution), please PM me.
+- There isn't anything more to this than meets the eye.  It doesn't "dial home" or look for wallets.  It does what it says, and nothing more.  
 
 Blockchain.info
 - These stats come from the API on http://blockchain.info.  There are tons more stats available, I'm only showing what I thought would be of most importance to miners.  
-- The estimated next difficulty is based upon the current avg time between blocks.  The formula is (10 / avg_time) * current_difficulty, as BTC is designed to have a block 
-every 10 minutes, and will retarget every 2016 blocks to get it back to 10 minutes.
+- The estimated next difficulty is based upon the true avg time between blocks for the current difficulty cycle (the value from the API is usually horribly off).  The formula is (10 / avg_time) * current_difficulty, as BTC is designed to have a block every 10 minutes, and will retarget every 2016 blocks to get it back to 10 minutes.
+- This includes a BTC per hashrate estimator on the blockchain.info tab. It defaults to using current values, but you can override them and calculate your own values.  This also includes a USD per hashrate estimator.
 
 Eligius
 - Averages for Eligius intentionally only show for the 256 second reading.  (The average routine is what feeds the "idle worker" logic.)
@@ -21,6 +20,7 @@ version.
 - The luck values for Eligius update once an hour.
 - Sometimes the "balance last block" comes back from Eligius as "N/A".
 - The API from Eligius doesn't currently properly support worker names in _format.  It only reports the total across all the _workers.
+- Eligius supports up to 3 payments addresses.  If only one address is used, "default" will show as the username in the grid.  Otherwise, the full address will show.  For the "balance last block", "estimated total", and "payout queue position", all three represent the combination of your multiple addresses.  For the balances, putting your cursor over the field will show the breakdown of which address has which balance.
 
 Idle worker alerts
 - An "idle" worker is one who's had a non zero hash rate for at least 5 minutes and now has a zero hash rate for at least 5 minutes.

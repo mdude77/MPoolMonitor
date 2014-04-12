@@ -70,6 +70,25 @@ Partial Class frmMain
         Me.txtBitMinterShiftScore = New System.Windows.Forms.TextBox()
         Me.dataBitMinter = New System.Windows.Forms.DataGridView()
         Me.tabBlockchainInfo = New System.Windows.Forms.TabPage()
+        Me.txtBCIc_DollarValue = New System.Windows.Forms.TextBox()
+        Me.Label131 = New System.Windows.Forms.Label()
+        Me.txtBCIc_MarketPrice = New System.Windows.Forms.TextBox()
+        Me.Label128 = New System.Windows.Forms.Label()
+        Me.txtBCIc_Blocksize = New System.Windows.Forms.TextBox()
+        Me.cmbBCIc_HashRate = New System.Windows.Forms.ComboBox()
+        Me.cmdBCIc_CalcSave = New System.Windows.Forms.Button()
+        Me.Label130 = New System.Windows.Forms.Label()
+        Me.Label129 = New System.Windows.Forms.Label()
+        Me.txtBCIc_FeeDonation = New System.Windows.Forms.TextBox()
+        Me.lblBCIc_Days = New System.Windows.Forms.Label()
+        Me.txtBCIc_PeriodInDays = New System.Windows.Forms.TextBox()
+        Me.Label127 = New System.Windows.Forms.Label()
+        Me.txtBCIc_BTCGenerated = New System.Windows.Forms.TextBox()
+        Me.Label126 = New System.Windows.Forms.Label()
+        Me.txtBCIc_Hashrate = New System.Windows.Forms.TextBox()
+        Me.Label125 = New System.Windows.Forms.Label()
+        Me.txtBCIc_Difficulty = New System.Windows.Forms.TextBox()
+        Me.Label124 = New System.Windows.Forms.Label()
         Me.TextBox9 = New System.Windows.Forms.TextBox()
         Me.Label113 = New System.Windows.Forms.Label()
         Me.txtBCI_NextDifficultyChangeBlocks = New System.Windows.Forms.TextBox()
@@ -188,10 +207,10 @@ Partial Class frmMain
         Me.dataLTCRabbit = New System.Windows.Forms.DataGridView()
         Me.tabMultipool = New System.Windows.Forms.TabPage()
         Me.tabMultiDataGrids = New System.Windows.Forms.TabControl()
-        Me.tabCoinData = New System.Windows.Forms.TabPage()
-        Me.dataMultiCoinData = New System.Windows.Forms.DataGridView()
         Me.tabWorkerData = New System.Windows.Forms.TabPage()
         Me.dataMultiWorkerData = New System.Windows.Forms.DataGridView()
+        Me.tabCoinData = New System.Windows.Forms.TabPage()
+        Me.dataMultiCoinData = New System.Windows.Forms.DataGridView()
         Me.TextBox8 = New System.Windows.Forms.TextBox()
         Me.txtMultipoolUserHashRate = New System.Windows.Forms.TextBox()
         Me.tabP2pool = New System.Windows.Forms.TabPage()
@@ -275,6 +294,10 @@ Partial Class frmMain
         Me.txtEclipseAPIKey = New System.Windows.Forms.TextBox()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.tabConfigureEligius = New System.Windows.Forms.TabPage()
+        Me.txtEligiusBTCAddy3 = New System.Windows.Forms.TextBox()
+        Me.Label123 = New System.Windows.Forms.Label()
+        Me.txtEligiusBTCAddy2 = New System.Windows.Forms.TextBox()
+        Me.Label122 = New System.Windows.Forms.Label()
         Me.chkEligiusEnabled = New System.Windows.Forms.CheckBox()
         Me.txtEligiusBTCAddress = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
@@ -384,10 +407,10 @@ Partial Class frmMain
         CType(Me.dataLTCRabbit, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabMultipool.SuspendLayout()
         Me.tabMultiDataGrids.SuspendLayout()
-        Me.tabCoinData.SuspendLayout()
-        CType(Me.dataMultiCoinData, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabWorkerData.SuspendLayout()
         CType(Me.dataMultiWorkerData, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabCoinData.SuspendLayout()
+        CType(Me.dataMultiCoinData, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabP2pool.SuspendLayout()
         CType(Me.dataP2pool, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabScryptGuild.SuspendLayout()
@@ -878,6 +901,25 @@ Partial Class frmMain
         '
         'tabBlockchainInfo
         '
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_DollarValue)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label131)
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_MarketPrice)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label128)
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_Blocksize)
+        Me.tabBlockchainInfo.Controls.Add(Me.cmbBCIc_HashRate)
+        Me.tabBlockchainInfo.Controls.Add(Me.cmdBCIc_CalcSave)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label130)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label129)
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_FeeDonation)
+        Me.tabBlockchainInfo.Controls.Add(Me.lblBCIc_Days)
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_PeriodInDays)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label127)
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_BTCGenerated)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label126)
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_Hashrate)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label125)
+        Me.tabBlockchainInfo.Controls.Add(Me.txtBCIc_Difficulty)
+        Me.tabBlockchainInfo.Controls.Add(Me.Label124)
         Me.tabBlockchainInfo.Controls.Add(Me.TextBox9)
         Me.tabBlockchainInfo.Controls.Add(Me.Label113)
         Me.tabBlockchainInfo.Controls.Add(Me.txtBCI_NextDifficultyChangeBlocks)
@@ -902,9 +944,172 @@ Partial Class frmMain
         Me.tabBlockchainInfo.Text = "Blockchain.info"
         Me.tabBlockchainInfo.UseVisualStyleBackColor = True
         '
+        'txtBCIc_DollarValue
+        '
+        Me.txtBCIc_DollarValue.Location = New System.Drawing.Point(248, 412)
+        Me.txtBCIc_DollarValue.Name = "txtBCIc_DollarValue"
+        Me.txtBCIc_DollarValue.ReadOnly = True
+        Me.txtBCIc_DollarValue.Size = New System.Drawing.Size(192, 27)
+        Me.txtBCIc_DollarValue.TabIndex = 110
+        '
+        'Label131
+        '
+        Me.Label131.AutoSize = True
+        Me.Label131.Location = New System.Drawing.Point(120, 415)
+        Me.Label131.Name = "Label131"
+        Me.Label131.Size = New System.Drawing.Size(122, 20)
+        Me.Label131.TabIndex = 109
+        Me.Label131.Text = "per BTC, that's"
+        '
+        'txtBCIc_MarketPrice
+        '
+        Me.txtBCIc_MarketPrice.Location = New System.Drawing.Point(37, 412)
+        Me.txtBCIc_MarketPrice.Name = "txtBCIc_MarketPrice"
+        Me.txtBCIc_MarketPrice.Size = New System.Drawing.Size(77, 27)
+        Me.txtBCIc_MarketPrice.TabIndex = 108
+        '
+        'Label128
+        '
+        Me.Label128.AutoSize = True
+        Me.Label128.Location = New System.Drawing.Point(10, 415)
+        Me.Label128.Name = "Label128"
+        Me.Label128.Size = New System.Drawing.Size(25, 20)
+        Me.Label128.TabIndex = 107
+        Me.Label128.Text = "At"
+        '
+        'txtBCIc_Blocksize
+        '
+        Me.txtBCIc_Blocksize.Location = New System.Drawing.Point(257, 379)
+        Me.txtBCIc_Blocksize.Name = "txtBCIc_Blocksize"
+        Me.txtBCIc_Blocksize.Size = New System.Drawing.Size(43, 27)
+        Me.txtBCIc_Blocksize.TabIndex = 106
+        Me.txtBCIc_Blocksize.Text = "25"
+        Me.txtBCIc_Blocksize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'cmbBCIc_HashRate
+        '
+        Me.cmbBCIc_HashRate.FormattingEnabled = True
+        Me.cmbBCIc_HashRate.Items.AddRange(New Object() {"MH/s", "GH/s", "TH/s", "EH/s", "PH/s", "ZH/s", "BFH/s"})
+        Me.cmbBCIc_HashRate.Location = New System.Drawing.Point(362, 269)
+        Me.cmbBCIc_HashRate.Name = "cmbBCIc_HashRate"
+        Me.cmbBCIc_HashRate.Size = New System.Drawing.Size(77, 28)
+        Me.cmbBCIc_HashRate.TabIndex = 105
+        '
+        'cmdBCIc_CalcSave
+        '
+        Me.cmdBCIc_CalcSave.Location = New System.Drawing.Point(306, 372)
+        Me.cmdBCIc_CalcSave.Name = "cmdBCIc_CalcSave"
+        Me.cmdBCIc_CalcSave.Size = New System.Drawing.Size(134, 34)
+        Me.cmdBCIc_CalcSave.TabIndex = 104
+        Me.cmdBCIc_CalcSave.Text = "Calculate/Save"
+        Me.cmdBCIc_CalcSave.UseVisualStyleBackColor = True
+        '
+        'Label130
+        '
+        Me.Label130.AutoSize = True
+        Me.Label130.Location = New System.Drawing.Point(10, 382)
+        Me.Label130.Name = "Label130"
+        Me.Label130.Size = New System.Drawing.Size(243, 20)
+        Me.Label130.TabIndex = 103
+        Me.Label130.Text = "fee/donation with a blocksize of"
+        '
+        'Label129
+        '
+        Me.Label129.AutoSize = True
+        Me.Label129.Location = New System.Drawing.Point(415, 345)
+        Me.Label129.Name = "Label129"
+        Me.Label129.Size = New System.Drawing.Size(24, 20)
+        Me.Label129.TabIndex = 102
+        Me.Label129.Text = "%"
+        '
+        'txtBCIc_FeeDonation
+        '
+        Me.txtBCIc_FeeDonation.Location = New System.Drawing.Point(376, 342)
+        Me.txtBCIc_FeeDonation.Name = "txtBCIc_FeeDonation"
+        Me.txtBCIc_FeeDonation.Size = New System.Drawing.Size(33, 27)
+        Me.txtBCIc_FeeDonation.TabIndex = 101
+        Me.txtBCIc_FeeDonation.Text = "1"
+        Me.txtBCIc_FeeDonation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'lblBCIc_Days
+        '
+        Me.lblBCIc_Days.AutoSize = True
+        Me.lblBCIc_Days.Location = New System.Drawing.Point(245, 345)
+        Me.lblBCIc_Days.Name = "lblBCIc_Days"
+        Me.lblBCIc_Days.Size = New System.Drawing.Size(116, 20)
+        Me.lblBCIc_Days.TabIndex = 100
+        Me.lblBCIc_Days.Text = "day, assuming"
+        '
+        'txtBCIc_PeriodInDays
+        '
+        Me.txtBCIc_PeriodInDays.Location = New System.Drawing.Point(196, 342)
+        Me.txtBCIc_PeriodInDays.Name = "txtBCIc_PeriodInDays"
+        Me.txtBCIc_PeriodInDays.Size = New System.Drawing.Size(43, 27)
+        Me.txtBCIc_PeriodInDays.TabIndex = 99
+        Me.txtBCIc_PeriodInDays.Text = "1"
+        Me.txtBCIc_PeriodInDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label127
+        '
+        Me.Label127.AutoSize = True
+        Me.Label127.Location = New System.Drawing.Point(10, 345)
+        Me.Label127.Name = "Label127"
+        Me.Label127.Size = New System.Drawing.Size(183, 20)
+        Me.Label127.TabIndex = 98
+        Me.Label127.Text = "BTC over the course of"
+        '
+        'txtBCIc_BTCGenerated
+        '
+        Me.txtBCIc_BTCGenerated.Location = New System.Drawing.Point(306, 312)
+        Me.txtBCIc_BTCGenerated.Name = "txtBCIc_BTCGenerated"
+        Me.txtBCIc_BTCGenerated.ReadOnly = True
+        Me.txtBCIc_BTCGenerated.Size = New System.Drawing.Size(132, 27)
+        Me.txtBCIc_BTCGenerated.TabIndex = 97
+        '
+        'Label126
+        '
+        Me.Label126.AutoSize = True
+        Me.Label126.Location = New System.Drawing.Point(10, 312)
+        Me.Label126.Name = "Label126"
+        Me.Label126.Size = New System.Drawing.Size(300, 20)
+        Me.Label126.TabIndex = 96
+        Me.Label126.Text = "hashrate, on average you will generate "
+        '
+        'txtBCIc_Hashrate
+        '
+        Me.txtBCIc_Hashrate.Location = New System.Drawing.Point(292, 270)
+        Me.txtBCIc_Hashrate.Name = "txtBCIc_Hashrate"
+        Me.txtBCIc_Hashrate.Size = New System.Drawing.Size(64, 27)
+        Me.txtBCIc_Hashrate.TabIndex = 95
+        '
+        'Label125
+        '
+        Me.Label125.AutoSize = True
+        Me.Label125.Location = New System.Drawing.Point(180, 273)
+        Me.Label125.Name = "Label125"
+        Me.Label125.Size = New System.Drawing.Size(110, 20)
+        Me.Label125.TabIndex = 94
+        Me.Label125.Text = "difficulty, with"
+        '
+        'txtBCIc_Difficulty
+        '
+        Me.txtBCIc_Difficulty.Location = New System.Drawing.Point(37, 270)
+        Me.txtBCIc_Difficulty.Name = "txtBCIc_Difficulty"
+        Me.txtBCIc_Difficulty.Size = New System.Drawing.Size(140, 27)
+        Me.txtBCIc_Difficulty.TabIndex = 93
+        '
+        'Label124
+        '
+        Me.Label124.AutoSize = True
+        Me.Label124.Location = New System.Drawing.Point(10, 273)
+        Me.Label124.Name = "Label124"
+        Me.Label124.Size = New System.Drawing.Size(25, 20)
+        Me.Label124.TabIndex = 92
+        Me.Label124.Text = "At"
+        '
         'TextBox9
         '
-        Me.TextBox9.Location = New System.Drawing.Point(8, 270)
+        Me.TextBox9.Location = New System.Drawing.Point(10, 450)
         Me.TextBox9.Name = "TextBox9"
         Me.TextBox9.ReadOnly = True
         Me.TextBox9.Size = New System.Drawing.Size(618, 27)
@@ -2086,33 +2291,6 @@ Partial Class frmMain
         Me.tabMultiDataGrids.Size = New System.Drawing.Size(658, 397)
         Me.tabMultiDataGrids.TabIndex = 99
         '
-        'tabCoinData
-        '
-        Me.tabCoinData.Controls.Add(Me.dataMultiCoinData)
-        Me.tabCoinData.Location = New System.Drawing.Point(4, 4)
-        Me.tabCoinData.Name = "tabCoinData"
-        Me.tabCoinData.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabCoinData.Size = New System.Drawing.Size(625, 389)
-        Me.tabCoinData.TabIndex = 0
-        Me.tabCoinData.Text = "Coin Data"
-        Me.tabCoinData.UseVisualStyleBackColor = True
-        '
-        'dataMultiCoinData
-        '
-        Me.dataMultiCoinData.AllowUserToAddRows = False
-        Me.dataMultiCoinData.AllowUserToDeleteRows = False
-        Me.dataMultiCoinData.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dataMultiCoinData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dataMultiCoinData.Location = New System.Drawing.Point(6, 6)
-        Me.dataMultiCoinData.Name = "dataMultiCoinData"
-        Me.dataMultiCoinData.ReadOnly = True
-        Me.dataMultiCoinData.RowHeadersVisible = False
-        Me.dataMultiCoinData.RowTemplate.Height = 24
-        Me.dataMultiCoinData.Size = New System.Drawing.Size(616, 380)
-        Me.dataMultiCoinData.TabIndex = 98
-        '
         'tabWorkerData
         '
         Me.tabWorkerData.Controls.Add(Me.dataMultiWorkerData)
@@ -2137,8 +2315,35 @@ Partial Class frmMain
         Me.dataMultiWorkerData.ReadOnly = True
         Me.dataMultiWorkerData.RowHeadersVisible = False
         Me.dataMultiWorkerData.RowTemplate.Height = 24
-        Me.dataMultiWorkerData.Size = New System.Drawing.Size(616, 380)
+        Me.dataMultiWorkerData.Size = New System.Drawing.Size(640, 380)
         Me.dataMultiWorkerData.TabIndex = 99
+        '
+        'tabCoinData
+        '
+        Me.tabCoinData.Controls.Add(Me.dataMultiCoinData)
+        Me.tabCoinData.Location = New System.Drawing.Point(4, 4)
+        Me.tabCoinData.Name = "tabCoinData"
+        Me.tabCoinData.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabCoinData.Size = New System.Drawing.Size(625, 389)
+        Me.tabCoinData.TabIndex = 0
+        Me.tabCoinData.Text = "Coin Data"
+        Me.tabCoinData.UseVisualStyleBackColor = True
+        '
+        'dataMultiCoinData
+        '
+        Me.dataMultiCoinData.AllowUserToAddRows = False
+        Me.dataMultiCoinData.AllowUserToDeleteRows = False
+        Me.dataMultiCoinData.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dataMultiCoinData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dataMultiCoinData.Location = New System.Drawing.Point(6, 6)
+        Me.dataMultiCoinData.Name = "dataMultiCoinData"
+        Me.dataMultiCoinData.ReadOnly = True
+        Me.dataMultiCoinData.RowHeadersVisible = False
+        Me.dataMultiCoinData.RowTemplate.Height = 24
+        Me.dataMultiCoinData.Size = New System.Drawing.Size(640, 380)
+        Me.dataMultiCoinData.TabIndex = 98
         '
         'TextBox8
         '
@@ -2576,7 +2781,7 @@ Partial Class frmMain
         Me.dataScryptGuildWorkerData.ReadOnly = True
         Me.dataScryptGuildWorkerData.RowHeadersVisible = False
         Me.dataScryptGuildWorkerData.RowTemplate.Height = 24
-        Me.dataScryptGuildWorkerData.Size = New System.Drawing.Size(616, 380)
+        Me.dataScryptGuildWorkerData.Size = New System.Drawing.Size(640, 380)
         Me.dataScryptGuildWorkerData.TabIndex = 99
         '
         'tabBalances
@@ -2603,7 +2808,7 @@ Partial Class frmMain
         Me.dataScryptGuildBalanceData.ReadOnly = True
         Me.dataScryptGuildBalanceData.RowHeadersVisible = False
         Me.dataScryptGuildBalanceData.RowTemplate.Height = 24
-        Me.dataScryptGuildBalanceData.Size = New System.Drawing.Size(616, 380)
+        Me.dataScryptGuildBalanceData.Size = New System.Drawing.Size(640, 380)
         Me.dataScryptGuildBalanceData.TabIndex = 98
         '
         'tabSlush
@@ -3001,6 +3206,10 @@ Partial Class frmMain
         '
         'tabConfigureEligius
         '
+        Me.tabConfigureEligius.Controls.Add(Me.txtEligiusBTCAddy3)
+        Me.tabConfigureEligius.Controls.Add(Me.Label123)
+        Me.tabConfigureEligius.Controls.Add(Me.txtEligiusBTCAddy2)
+        Me.tabConfigureEligius.Controls.Add(Me.Label122)
         Me.tabConfigureEligius.Controls.Add(Me.chkEligiusEnabled)
         Me.tabConfigureEligius.Controls.Add(Me.txtEligiusBTCAddress)
         Me.tabConfigureEligius.Controls.Add(Me.Label19)
@@ -3010,6 +3219,38 @@ Partial Class frmMain
         Me.tabConfigureEligius.TabIndex = 11
         Me.tabConfigureEligius.Text = "Eligius"
         Me.tabConfigureEligius.UseVisualStyleBackColor = True
+        '
+        'txtEligiusBTCAddy3
+        '
+        Me.txtEligiusBTCAddy3.Location = New System.Drawing.Point(127, 99)
+        Me.txtEligiusBTCAddy3.Name = "txtEligiusBTCAddy3"
+        Me.txtEligiusBTCAddy3.Size = New System.Drawing.Size(402, 27)
+        Me.txtEligiusBTCAddy3.TabIndex = 41
+        '
+        'Label123
+        '
+        Me.Label123.AutoSize = True
+        Me.Label123.Location = New System.Drawing.Point(6, 102)
+        Me.Label123.Name = "Label123"
+        Me.Label123.Size = New System.Drawing.Size(113, 20)
+        Me.Label123.TabIndex = 42
+        Me.Label123.Text = "BTC Addy #3:"
+        '
+        'txtEligiusBTCAddy2
+        '
+        Me.txtEligiusBTCAddy2.Location = New System.Drawing.Point(127, 66)
+        Me.txtEligiusBTCAddy2.Name = "txtEligiusBTCAddy2"
+        Me.txtEligiusBTCAddy2.Size = New System.Drawing.Size(402, 27)
+        Me.txtEligiusBTCAddy2.TabIndex = 39
+        '
+        'Label122
+        '
+        Me.Label122.AutoSize = True
+        Me.Label122.Location = New System.Drawing.Point(6, 69)
+        Me.Label122.Name = "Label122"
+        Me.Label122.Size = New System.Drawing.Size(113, 20)
+        Me.Label122.TabIndex = 40
+        Me.Label122.Text = "BTC Addy #2:"
         '
         'chkEligiusEnabled
         '
@@ -3419,7 +3660,7 @@ Partial Class frmMain
         Me.TabControl2.Multiline = True
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(609, 327)
+        Me.TabControl2.Size = New System.Drawing.Size(681, 327)
         Me.TabControl2.TabIndex = 58
         '
         'tabIdleUserProcess
@@ -3433,7 +3674,7 @@ Partial Class frmMain
         Me.tabIdleUserProcess.Location = New System.Drawing.Point(29, 4)
         Me.tabIdleUserProcess.Name = "tabIdleUserProcess"
         Me.tabIdleUserProcess.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabIdleUserProcess.Size = New System.Drawing.Size(576, 319)
+        Me.tabIdleUserProcess.Size = New System.Drawing.Size(648, 319)
         Me.tabIdleUserProcess.TabIndex = 1
         Me.tabIdleUserProcess.Text = "Start app"
         Me.tabIdleUserProcess.UseVisualStyleBackColor = True
@@ -3521,7 +3762,7 @@ Partial Class frmMain
         Me.tabIdleEmail.Location = New System.Drawing.Point(29, 4)
         Me.tabIdleEmail.Name = "tabIdleEmail"
         Me.tabIdleEmail.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabIdleEmail.Size = New System.Drawing.Size(576, 319)
+        Me.tabIdleEmail.Size = New System.Drawing.Size(648, 319)
         Me.tabIdleEmail.TabIndex = 0
         Me.tabIdleEmail.Text = "EMail"
         Me.tabIdleEmail.UseVisualStyleBackColor = True
@@ -3905,7 +4146,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmMain"
-        Me.Text = "M's Pool Monitor v3.6"
+        Me.Text = "M's Pool Monitor v3.9"
         Me.tabsShown.ResumeLayout(False)
         Me.tab50BTC.ResumeLayout(False)
         Me.tab50BTC.PerformLayout()
@@ -3933,10 +4174,10 @@ Partial Class frmMain
         Me.tabMultipool.ResumeLayout(False)
         Me.tabMultipool.PerformLayout()
         Me.tabMultiDataGrids.ResumeLayout(False)
-        Me.tabCoinData.ResumeLayout(False)
-        CType(Me.dataMultiCoinData, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabWorkerData.ResumeLayout(False)
         CType(Me.dataMultiWorkerData, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabCoinData.ResumeLayout(False)
+        CType(Me.dataMultiCoinData, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabP2pool.ResumeLayout(False)
         Me.tabP2pool.PerformLayout()
         CType(Me.dataP2pool, System.ComponentModel.ISupportInitialize).EndInit()
@@ -4225,8 +4466,6 @@ Partial Class frmMain
     Friend WithEvents txtBCI_NetworkHashRate As System.Windows.Forms.TextBox
     Friend WithEvents Label108 As System.Windows.Forms.Label
     Friend WithEvents txtBCI_MarketPriceUSD As System.Windows.Forms.TextBox
-    Friend WithEvents Label107 As System.Windows.Forms.Label
-    Friend WithEvents txtBCI_MinsBetweenBlocks As System.Windows.Forms.TextBox
     Friend WithEvents Label113 As System.Windows.Forms.Label
     Friend WithEvents txtBCI_NextDifficultyChangeBlocks As System.Windows.Forms.TextBox
     Friend WithEvents Label112 As System.Windows.Forms.Label
@@ -4332,5 +4571,30 @@ Partial Class frmMain
     Friend WithEvents Label119 As System.Windows.Forms.Label
     Friend WithEvents Label121 As System.Windows.Forms.Label
     Friend WithEvents txtLTCRabbitPoolhash As System.Windows.Forms.TextBox
+    Friend WithEvents txtEligiusBTCAddy3 As System.Windows.Forms.TextBox
+    Friend WithEvents Label123 As System.Windows.Forms.Label
+    Friend WithEvents txtEligiusBTCAddy2 As System.Windows.Forms.TextBox
+    Friend WithEvents Label122 As System.Windows.Forms.Label
+    Friend WithEvents Label107 As System.Windows.Forms.Label
+    Friend WithEvents txtBCI_MinsBetweenBlocks As System.Windows.Forms.TextBox
+    Friend WithEvents cmdBCIc_CalcSave As System.Windows.Forms.Button
+    Friend WithEvents Label130 As System.Windows.Forms.Label
+    Friend WithEvents Label129 As System.Windows.Forms.Label
+    Friend WithEvents txtBCIc_FeeDonation As System.Windows.Forms.TextBox
+    Friend WithEvents lblBCIc_Days As System.Windows.Forms.Label
+    Friend WithEvents txtBCIc_PeriodInDays As System.Windows.Forms.TextBox
+    Friend WithEvents Label127 As System.Windows.Forms.Label
+    Friend WithEvents txtBCIc_BTCGenerated As System.Windows.Forms.TextBox
+    Friend WithEvents Label126 As System.Windows.Forms.Label
+    Friend WithEvents txtBCIc_Hashrate As System.Windows.Forms.TextBox
+    Friend WithEvents Label125 As System.Windows.Forms.Label
+    Friend WithEvents txtBCIc_Difficulty As System.Windows.Forms.TextBox
+    Friend WithEvents Label124 As System.Windows.Forms.Label
+    Friend WithEvents cmbBCIc_HashRate As System.Windows.Forms.ComboBox
+    Friend WithEvents txtBCIc_Blocksize As System.Windows.Forms.TextBox
+    Friend WithEvents txtBCIc_DollarValue As System.Windows.Forms.TextBox
+    Friend WithEvents Label131 As System.Windows.Forms.Label
+    Friend WithEvents txtBCIc_MarketPrice As System.Windows.Forms.TextBox
+    Friend WithEvents Label128 As System.Windows.Forms.Label
 
 End Class
