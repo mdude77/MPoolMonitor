@@ -79,6 +79,9 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonSource\generic.vb">
+      <Link>generic.vb</Link>
+    </Compile>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="frmAnnoyingPopup.Designer.vb">
       <DependentUpon>frmAnnoyingPopup.vb</DependentUpon>

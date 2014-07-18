@@ -15,7 +15,7 @@ Public Class frmMain
 
     Private Const csRegKey As String = "Software\MMiningMonitor"
 
-    Private dictRegkeyNames As Dictionary(Of String, String)
+    Private ctlsByKey As ControlsByRegistry
 
     'who has the DB open
     Shared colDBOpenList As System.Collections.Generic.List(Of String)
@@ -36,7 +36,7 @@ Public Class frmMain
             WorkerData = New List(Of clsWorkerData)
         End Sub
 
-        Public iYourTotalShares As Integer
+        Public iYourTotalShares As UInt64
         Public dLastShareTime As Date
         Public bNewBlockFound As Boolean
         Public dLastBlockTime As Date
@@ -187,93 +187,94 @@ Public Class frmMain
 
         'dictionary of reg key names by control name
         'saves from typos and case sensitivity issues
-        dictRegkeyNames = New Dictionary(Of String, String)
+        'dictRegkeyNames = New Dictionary(Of String, String)
+        ctlsByKey = New ControlsByRegistry(csRegKey)
 
-        With dictRegkeyNames
+        With ctlsByKey
             'options
-            .Add(Me.chkConfigStoreDBStatistics.Name, "DBStatistics")
-            .Add(Me.cmbConfigRefreshRate.Name, "RefreshRate")
+            .AddControl(Me.chkConfigStoreDBStatistics, "DBStatistics")
+            .AddControl(Me.cmbConfigRefreshRate, "RefreshRate")
 
             'idle alerts
-            .Add(Me.chkIdleEMailAlerts.Name, "IdleAlerts")
-            .Add(Me.chkIdlePopup.Name, "IdlePopup")
-            .Add(Me.chkIdleWorkPopUpWithBeeps.Name, "IdlePopupWithBeeps")
-            .Add(Me.chkIdleStartApp.Name, "IdleStartapp")
-            .Add(Me.txtIdleStartAppName.Name, "IdleStartappName")
-            .Add(Me.txtIdleStartParms.Name, "IdleStartappParms")
+            .AddControl(Me.chkIdleEMailAlerts, "IdleAlerts")
+            .AddControl(Me.chkIdlePopup, "IdlePopup")
+            .AddControl(Me.chkIdleWorkPopUpWithBeeps, "IdlePopupWithBeeps")
+            .AddControl(Me.chkIdleStartApp, "IdleStartapp")
+            .AddControl(Me.txtIdleStartAppName, "IdleStartappName")
+            .AddControl(Me.txtIdleStartParms, "IdleStartappParms")
 
             'email settings
-            .Add(Me.txtSMTPServer.Name, "SMTPServerName")
-            .Add(Me.txtSMTPPort.Name, "SMTPServerPort")
-            .Add(Me.txtSMTPUserName.Name, "SMTPUserName")
-            .Add(Me.txtSMTPPassword.Name, "SMTPUserPassword")
-            .Add(Me.txtSMTPAlertName.Name, "SMTPAlertName")
-            .Add(Me.txtSMTPAlertAddress.Name, "SMTPAlertAddress")
-            .Add(Me.txtSMTPAlertSubject.Name, "SMTPAlertSubject")
-            .Add(Me.txtSMTPFromName.Name, "SMTPFromName")
-            .Add(Me.txtSMTPFromAddress.Name, "SMTPFromAddress")
-            .Add(Me.chkSMTPSSL.Name, "SMTPUseSSL")
+            .AddControl(Me.txtSMTPServer, "SMTPServerName")
+            .AddControl(Me.txtSMTPPort, "SMTPServerPort")
+            .AddControl(Me.txtSMTPUserName, "SMTPUserName")
+            .AddControl(Me.txtSMTPPassword, "SMTPUserPassword")
+            .AddControl(Me.txtSMTPAlertName, "SMTPAlertName")
+            .AddControl(Me.txtSMTPAlertAddress, "SMTPAlertAddress")
+            .AddControl(Me.txtSMTPAlertSubject, "SMTPAlertSubject")
+            .AddControl(Me.txtSMTPFromName, "SMTPFromName")
+            .AddControl(Me.txtSMTPFromAddress, "SMTPFromAddress")
+            .AddControl(Me.chkSMTPSSL, "SMTPUseSSL")
 
             '50btc
-            .Add(Me.chk50BTCEnabled.Name, "50BTCEnabled")
-            .Add(Me.txt50BTCAPIKey.Name, "50BTCBTCAddy")    'not sure why I set it to this... but can't change it now
+            .AddControl(Me.chk50BTCEnabled, "50BTCEnabled")
+            .AddControl(Me.txt50BTCAPIKey, "50BTCBTCAddy")    'not sure why I set it to this... but can't change it now
 
             'eclipse
-            .Add(Me.chkEclipseEnabled.Name, "EclipseEnabled")
-            .Add(Me.txtEclipseAPIKey.Name, "EclipseAPIKey")
+            .AddControl(Me.chkEclipseEnabled, "EclipseEnabled")
+            .AddControl(Me.txtEclipseAPIKey, "EclipseAPIKey")
 
             'ozcoin
-            .Add(Me.chkOzcoinEnabled.Name, "OzcoinEnabled")
-            .Add(Me.txtOzcoinAPIKey.Name, "OzcoinAPIKey")
+            .AddControl(Me.chkOzcoinEnabled, "OzcoinEnabled")
+            .AddControl(Me.txtOzcoinAPIKey, "OzcoinAPIKey")
 
             'p2pool
-            .Add(Me.chkP2PoolEnabled.Name, "P2PoolEnabled")
-            .Add(Me.txtP2PoolURL.Name, "P2PoolURL")
-            .Add(Me.txtP2PoolBTCAddy.Name, "P2PoolBTCAddy")
-            .Add(Me.chkP2PoolScrypt.Name, "P2PoolScryptPool")
-            .Add(Me.chkP2PPublicPool.Name, "P2PoolPublicPool")
+            .AddControl(Me.chkP2PoolEnabled, "P2PoolEnabled")
+            .AddControl(Me.txtP2PoolURL, "P2PoolURL")
+            .AddControl(Me.txtP2PoolBTCAddy, "P2PoolBTCAddy")
+            .AddControl(Me.chkP2PoolScrypt, "P2PoolScryptPool")
+            .AddControl(Me.chkP2PPublicPool, "P2PoolPublicPool")
 
             'bitminter
-            .Add(Me.chkBitMinterEnabled.Name, "BitMinterEnabled")
-            .Add(Me.txtBitMinterAPIKey.Name, "BitMinterAPIKey")
-            .Add(Me.chkBitMinterShowWorkerCheckPoint.Name, "BitMinterShowWorkerCheckPointData")
-            .Add(Me.chkBitMinterShowWorkerTotals.Name, "BitMinterShowWorkerTotalData")
+            .AddControl(Me.chkBitMinterEnabled, "BitMinterEnabled")
+            .AddControl(Me.txtBitMinterAPIKey, "BitMinterAPIKey")
+            .AddControl(Me.chkBitMinterShowWorkerCheckPoint, "BitMinterShowWorkerCheckPointData")
+            .AddControl(Me.chkBitMinterShowWorkerTotals, "BitMinterShowWorkerTotalData")
 
             'btcguild
-            .Add(Me.chkBTCGuildEnabled.Name, "BTCGuildEnabled")
-            .Add(Me.txtBTCGuildAPIKey.Name, "BTCGuildAPIKey")
+            .AddControl(Me.chkBTCGuildEnabled, "BTCGuildEnabled")
+            .AddControl(Me.txtBTCGuildAPIKey, "BTCGuildAPIKey")
 
             'slush
-            .Add(Me.chkSlushEnabled.Name, "SlushEnabled")
-            .Add(Me.txtSlushAPIKey.Name, "SlushAPIKey")
+            .AddControl(Me.chkSlushEnabled, "SlushEnabled")
+            .AddControl(Me.txtSlushAPIKey, "SlushAPIKey")
 
             'multipool
-            .Add(Me.chkMultipoolEnabled.Name, "MultipoolEnabled")
-            .Add(Me.txtMultipoolAPIKey.Name, "MultipoolAPIKey")
+            .AddControl(Me.chkMultipoolEnabled, "MultipoolEnabled")
+            .AddControl(Me.txtMultipoolAPIKey, "MultipoolAPIKey")
 
             'blockchain info
-            .Add(Me.chkBlockChainInfoEnabled.Name, "Blockchain.infoEnabled")
-            .Add(Me.cmbBlockChainInfoRefreshRate.Name, "Blockchain.InfoRefreshRate")
-            .Add(Me.txtBCIc_Blocksize.Name, "Blockchain.infoCalcBlockSize")
-            .Add(Me.txtBCIc_PeriodInDays.Name, "Blockchain.infoCalcPeriodInDays")
-            .Add(Me.txtBCIc_FeeDonation.Name, "Blockchain.infoCalcFeeDonation")
+            .AddControl(Me.chkBlockChainInfoEnabled, "Blockchain.infoEnabled")
+            .AddControl(Me.cmbBlockChainInfoRefreshRate, "Blockchain.InfoRefreshRate")
+            .AddControl(Me.txtBCIc_Blocksize, "Blockchain.infoCalcBlockSize")
+            .AddControl(Me.txtBCIc_PeriodInDays, "Blockchain.infoCalcPeriodInDays")
+            .AddControl(Me.txtBCIc_FeeDonation, "Blockchain.infoCalcFeeDonation")
 
             'scryptguild
-            .Add(Me.chkScryptGuildEnabled.Name, "ScryptGuildEnabled")
-            .Add(Me.chkScryptGuildShowBalanceData.Name, "ScryptGuildShowBalanceData")
-            .Add(Me.chkScryptGuildShowWorkerData.Name, "ScryptGuildShowWorkerData")
-            .Add(Me.txtScryptGuildAPIKey.Name, "ScryptGuildAPIKey")
-            .Add(Me.chkScryptGuildOmitTinyBalances.Name, "ScryptGuildOmitTinyBalances")
+            .AddControl(Me.chkScryptGuildEnabled, "ScryptGuildEnabled")
+            .AddControl(Me.chkScryptGuildShowBalanceData, "ScryptGuildShowBalanceData")
+            .AddControl(Me.chkScryptGuildShowWorkerData, "ScryptGuildShowWorkerData")
+            .AddControl(Me.txtScryptGuildAPIKey, "ScryptGuildAPIKey")
+            .AddControl(Me.chkScryptGuildOmitTinyBalances, "ScryptGuildOmitTinyBalances")
 
             'eligius
-            .Add(Me.chkEligiusEnabled.Name, "EligiusEnabled")
-            .Add(Me.txtEligiusBTCAddress.Name, "EligiusBTCAddress")
-            .Add(Me.txtEligiusBTCAddy2.Name, "EligiusBTCAddy2")
-            .Add(Me.txtEligiusBTCAddy3.Name, "EligiusBTCAddy3")
+            .AddControl(Me.chkEligiusEnabled, "EligiusEnabled")
+            .AddControl(Me.txtEligiusBTCAddress, "EligiusBTCAddress")
+            .AddControl(Me.txtEligiusBTCAddy2, "EligiusBTCAddy2")
+            .AddControl(Me.txtEligiusBTCAddy3, "EligiusBTCAddy3")
 
             'ltcrabbit
-            .Add(Me.chkLTCRabbitEnabled.Name, "LTCRabbitEnabled")
-            .Add(Me.txtLTCRabbitAPIKey.Name, "LTCRabbitAPIKey")
+            .AddControl(Me.chkLTCRabbitEnabled, "LTCRabbitEnabled")
+            .AddControl(Me.txtLTCRabbitAPIKey, "LTCRabbitAPIKey")
         End With
 
         'set the configuration options stored in the registry 
@@ -284,9 +285,9 @@ Public Class frmMain
         End Using
 
         Using key As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(csRegKey)
-            Call SetControlByRegKey(key, Me.chkConfigStoreDBStatistics)
-            Call SetControlByRegKey(key, Me.cmbConfigRefreshRate, "5 minutes")
-            Call SetControlByRegKey(key, Me.chkIdlePopup, True)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkConfigStoreDBStatistics)
+            Call ctlsByKey.SetControlByRegKey(key, Me.cmbConfigRefreshRate, "5 minutes")
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkIdlePopup, True)
 
             If key.GetValue("Width") > 100 Then
                 Me.Width = key.GetValue("Width")
@@ -301,85 +302,85 @@ Public Class frmMain
             End If
 
             'idle alerts
-            Call SetControlByRegKey(key, Me.chkIdleEMailAlerts)
-            Call SetControlByRegKey(key, Me.chkIdlePopup, True)
-            Call SetControlByRegKey(key, Me.chkIdleWorkPopUpWithBeeps, True)
-            Call SetControlByRegKey(key, Me.chkIdleStartApp)
-            Call SetControlByRegKey(key, Me.txtIdleStartAppName)
-            Call SetControlByRegKey(key, Me.txtIdleStartParms)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkIdleEMailAlerts)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkIdlePopup, True)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkIdleWorkPopUpWithBeeps, True)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkIdleStartApp)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtIdleStartAppName)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtIdleStartParms)
 
             'email settings
-            Call SetControlByRegKey(key, Me.txtSMTPServer)
-            Call SetControlByRegKey(key, Me.txtSMTPPort)
-            Call SetControlByRegKey(key, Me.txtSMTPUserName)
-            Call SetControlByRegKey(key, Me.txtSMTPPassword)
-            Call SetControlByRegKey(key, Me.txtSMTPAlertName)
-            Call SetControlByRegKey(key, Me.txtSMTPAlertAddress)
-            Call SetControlByRegKey(key, Me.txtSMTPAlertSubject)
-            Call SetControlByRegKey(key, Me.txtSMTPFromName)
-            Call SetControlByRegKey(key, Me.txtSMTPFromAddress)
-            Call SetControlByRegKey(key, Me.chkSMTPSSL)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPServer)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPPort)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPUserName)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPPassword)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPAlertName)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPAlertAddress)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPAlertSubject)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPFromName)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSMTPFromAddress)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkSMTPSSL)
 
             '50btc
-            Call SetControlByRegKey(key, Me.chk50BTCEnabled)
-            Call SetControlByRegKey(key, Me.txt50BTCAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chk50BTCEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txt50BTCAPIKey)
 
             'eclipse
-            Call SetControlByRegKey(key, Me.chkEclipseEnabled)
-            Call SetControlByRegKey(key, Me.txtEclipseAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkEclipseEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtEclipseAPIKey)
 
             'ozcoin
-            Call SetControlByRegKey(key, Me.chkOzcoinEnabled)
-            Call SetControlByRegKey(key, Me.txtOzcoinAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkOzcoinEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtOzcoinAPIKey)
 
             'p2pool
-            Call SetControlByRegKey(key, Me.chkP2PoolEnabled)
-            Call SetControlByRegKey(key, Me.txtP2PoolURL)
-            Call SetControlByRegKey(key, Me.txtP2PoolBTCAddy)
-            Call SetControlByRegKey(key, Me.chkP2PoolScrypt)
-            Call SetControlByRegKey(key, Me.chkP2PPublicPool)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkP2PoolEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtP2PoolURL)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtP2PoolBTCAddy)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkP2PoolScrypt)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkP2PPublicPool)
 
             'bitminter
-            Call SetControlByRegKey(key, Me.chkBitMinterEnabled)
-            Call SetControlByRegKey(key, Me.txtBitMinterAPIKey)
-            Call SetControlByRegKey(key, Me.chkBitMinterShowWorkerCheckPoint)
-            Call SetControlByRegKey(key, Me.chkBitMinterShowWorkerTotals)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkBitMinterEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtBitMinterAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkBitMinterShowWorkerCheckPoint)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkBitMinterShowWorkerTotals)
 
             'btcguild
-            Call SetControlByRegKey(key, Me.chkBTCGuildEnabled)
-            Call SetControlByRegKey(key, Me.txtBTCGuildAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkBTCGuildEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtBTCGuildAPIKey)
 
             'slush
-            Call SetControlByRegKey(key, Me.chkSlushEnabled)
-            Call SetControlByRegKey(key, Me.txtSlushAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkSlushEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtSlushAPIKey)
 
             'multipool
-            Call SetControlByRegKey(key, Me.chkMultipoolEnabled)
-            Call SetControlByRegKey(key, Me.txtMultipoolAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkMultipoolEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtMultipoolAPIKey)
 
             'blockchain.info
-            Call SetControlByRegKey(key, Me.chkBlockChainInfoEnabled)
-            Call SetControlByRegKey(key, Me.cmbBlockChainInfoRefreshRate)
-            Call SetControlByRegKey(key, Me.txtBCIc_Blocksize)
-            Call SetControlByRegKey(key, Me.txtBCIc_PeriodInDays)
-            Call SetControlByRegKey(key, Me.txtBCIc_FeeDonation)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkBlockChainInfoEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.cmbBlockChainInfoRefreshRate)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtBCIc_Blocksize)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtBCIc_PeriodInDays)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtBCIc_FeeDonation)
 
             'scryptguild
-            Call SetControlByRegKey(key, Me.chkScryptGuildEnabled)
-            Call SetControlByRegKey(key, Me.chkScryptGuildShowBalanceData, True)
-            Call SetControlByRegKey(key, Me.chkScryptGuildShowWorkerData, True)
-            Call SetControlByRegKey(key, Me.txtScryptGuildAPIKey)
-            Call SetControlByRegKey(key, Me.chkScryptGuildOmitTinyBalances, True)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildShowBalanceData, True)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildShowWorkerData, True)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtScryptGuildAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildOmitTinyBalances, True)
 
             'eligius
-            Call SetControlByRegKey(key, Me.chkEligiusEnabled)
-            Call SetControlByRegKey(key, Me.txtEligiusBTCAddress)
-            Call SetControlByRegKey(key, Me.txtEligiusBTCAddy2)
-            Call SetControlByRegKey(key, Me.txtEligiusBTCAddy3)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkEligiusEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtEligiusBTCAddress)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtEligiusBTCAddy2)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtEligiusBTCAddy3)
 
             'ltcrabbit
-            Call SetControlByRegKey(key, Me.chkLTCRabbitEnabled)
-            Call SetControlByRegKey(key, Me.txtLTCRabbitAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkLTCRabbitEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtLTCRabbitAPIKey)
 
             key.Close()
         End Using
@@ -891,59 +892,7 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub SetControlByRegKey(ByRef regKey As Microsoft.Win32.RegistryKey, ByRef chkAny As CheckBox, Optional bDefault As Boolean = False)
-
-        Dim sKey As String
-        Dim sTemp As String
-
-        If dictRegkeyNames.TryGetValue(chkAny.Name, sKey) = True Then
-            sTemp = regKey.GetValue(sKey)
-
-            If sTemp = "Y" Then
-                chkAny.Checked = True
-            Else
-                If String.IsNullOrEmpty(sTemp) = True Then
-                    chkAny.Checked = bDefault
-                Else
-                    chkAny.Checked = False
-                End If
-            End If
-        Else
-            Throw New Exception("Internal error: " & chkAny.Name & " not found in regKey dictionary.")
-        End If
-
-    End Sub
-
-    Private Sub SetControlByRegKey(ByRef regKey As Microsoft.Win32.RegistryKey, ByRef txtAny As TextBox, Optional ByVal sDefault As String = "")
-
-        Call _SetControlByRegKey(regKey, txtAny, sDefault)
-
-    End Sub
-
-    Private Sub SetControlByRegKey(ByRef regKey As Microsoft.Win32.RegistryKey, ByRef cmbAny As ComboBox, Optional ByVal sDefault As String = "")
-
-        Call _SetControlByRegKey(regKey, cmbAny, sDefault)
-
-    End Sub
-
-    Private Sub _SetControlByRegKey(ByRef regKey As Microsoft.Win32.RegistryKey, ByRef ctlAny As Control, Optional ByVal sDefault As String = "")
-
-        Dim sKey As String
-        Dim sReturn As String
-
-        If dictRegkeyNames.TryGetValue(ctlAny.Name, sKey) = True Then
-            sReturn = regKey.GetValue(sKey)
-
-            If String.IsNullOrEmpty(sReturn) = True Then
-                ctlAny.Text = sDefault
-            Else
-                ctlAny.Text = sReturn
-            End If
-        Else
-            Throw New Exception("Internal error: " & ctlAny.Name & " not found in regKey dictionary.")
-        End If
-
-    End Sub
+    
 
     Private Sub SetGridSizes(ByVal sKey As String, ByRef dataGrid As DataGridView)
 
@@ -1496,7 +1445,7 @@ Public Class frmMain
                             Next
                         Next
 
-                        If Me.chkConfigStoreDBStatistics.Checked = True AndAlso pd.dLastShareTime <> #12:00:00 AM# AndAlso iShares <> pd.iYourTotalShares Then
+                        If Me.chkConfigStoreDBStatistics.Checked = True AndAlso pd.dLastShareTime <> #12:00:00 AM# AndAlso iShares > pd.iYourTotalShares Then
                             If bRound1 = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy2.Text) = True OrElse _
                                 bRound2 = True AndAlso String.IsNullOrEmpty(Me.txtEligiusBTCAddy3.Text) = True OrElse bRound3 = True Then
 
@@ -1850,35 +1799,65 @@ Public Class frmMain
                                             "FROM Luck " & _
                                             "Where Luck.Pool = '" & pd.sPoolName & "' and BlockTimeStamp > #" & Now.ToUniversalTime.AddHours(-12) & "#;"
 
-                        Me.txtEligiusLast12HourLuck.Text = Format(cmAny.ExecuteScalar, "###,##0.##%")
+                        If IsDBNull(cmAny.ExecuteScalar) = False Then
+                            dTemp = cmAny.ExecuteScalar
+                        Else
+                            dTemp = 0
+                        End If
+
+                        Me.txtEligiusLast12HourLuck.Text = Format(dTemp, "###,##0.##%")
 
                         '24 hours
                         cmAny.CommandText = "Select Sum(Luck.AvgSolveTime) / Sum(Luck.ActualSolveTime) " & _
                                             "FROM Luck " & _
                                             "Where Luck.Pool = '" & pd.sPoolName & "' and BlockTimeStamp > #" & Now.ToUniversalTime.AddHours(-24) & "#;"
 
-                        Me.txtEligiusLast24HourLuck.Text = Format(cmAny.ExecuteScalar, "###,##0.##%")
+                        If IsDBNull(cmAny.ExecuteScalar) = False Then
+                            dTemp = cmAny.ExecuteScalar
+                        Else
+                            dTemp = 0
+                        End If
+
+                        Me.txtEligiusLast24HourLuck.Text = Format(dTemp, "###,##0.##%")
 
                         '7 days
                         cmAny.CommandText = "Select Sum(Luck.AvgSolveTime) / Sum(Luck.ActualSolveTime) " & _
                                             "FROM Luck " & _
                                             "Where Luck.Pool = '" & pd.sPoolName & "' and BlockTimeStamp > #" & Now.ToUniversalTime.AddDays(-7) & "#;"
 
-                        Me.txtEligiusLast7DaysLuck.Text = Format(cmAny.ExecuteScalar, "###,##0.##%")
+                        If IsDBNull(cmAny.ExecuteScalar) = False Then
+                            dTemp = cmAny.ExecuteScalar
+                        Else
+                            dTemp = 0
+                        End If
+
+                        Me.txtEligiusLast7DaysLuck.Text = Format(dTemp, "###,##0.##%")
 
                         '30 days
                         cmAny.CommandText = "Select Sum(Luck.AvgSolveTime) / Sum(Luck.ActualSolveTime) " & _
                                             "FROM Luck " & _
                                             "Where Luck.Pool = '" & pd.sPoolName & "' and BlockTimeStamp > #" & Now.ToUniversalTime.AddDays(-30) & "#;"
 
-                        Me.txtEligiusLast30DaysLuck.Text = Format(cmAny.ExecuteScalar, "###,##0.##%")
+                        If IsDBNull(cmAny.ExecuteScalar) = False Then
+                            dTemp = cmAny.ExecuteScalar
+                        Else
+                            dTemp = 0
+                        End If
+
+                        Me.txtEligiusLast30DaysLuck.Text = Format(dTemp, "###,##0.##%")
 
                         '90 days
                         cmAny.CommandText = "Select Sum(Luck.AvgSolveTime) / Sum(Luck.ActualSolveTime) " & _
                                             "FROM Luck " & _
                                             "Where Luck.Pool = '" & pd.sPoolName & "' and BlockTimeStamp > #" & Now.ToUniversalTime.AddDays(-90) & "#;"
 
-                        Me.txtEligiusLast90DaysLuck.Text = Format(cmAny.ExecuteScalar, "###,##0.##%")
+                        If IsDBNull(cmAny.ExecuteScalar) = False Then
+                            dTemp = cmAny.ExecuteScalar
+                        Else
+                            dTemp = 0
+                        End If
+
+                        Me.txtEligiusLast90DaysLuck.Text = Format(dTemp, "###,##0.##%")
                     Catch ex As Exception When bErrorHandle = True
                         Me.txtEligiusUserHash.Text = "PJ:API ERROR6"
 
@@ -1911,7 +1890,7 @@ Public Class frmMain
 
         Dim j, jp1, jp2 As Newtonsoft.Json.Linq.JObject
         Dim dr As DataRow
-        Dim iShares As Integer
+        Dim iShares As UInt64
         Dim t As Integer
         Dim pd As clsPoolData
         Dim dHashTemp As Double
@@ -2019,7 +1998,7 @@ Public Class frmMain
         Dim j, jp1, jp2 As Newtonsoft.Json.Linq.JObject
         Dim ja As Newtonsoft.Json.Linq.JArray
         Dim dr As DataRow
-        Dim iShares As Integer
+        Dim iShares As UInt64
         Dim sTemp As String
         Dim dTemp As Date
         Dim pd As clsPoolData
@@ -2253,7 +2232,7 @@ Public Class frmMain
 
         Dim j, jp1, jp2 As Newtonsoft.Json.Linq.JObject
         Dim dr As DataRow
-        Dim iShares As Integer
+        Dim iShares As UInt64
         Dim sTemp As String
         Dim d, m, h As Integer
         Dim dTemp As Date
@@ -2435,7 +2414,7 @@ Public Class frmMain
         Dim j, jp1 As Newtonsoft.Json.Linq.JObject
         Dim ja As Newtonsoft.Json.Linq.JArray
         Dim dr As DataRow
-        Dim iShares As Integer
+        Dim iShares As UInt64
         Dim sTemp As String
         Dim pd As clsPoolData
         Dim dHashRate, dHashTemp As Double
@@ -2669,7 +2648,7 @@ Public Class frmMain
         Dim j, jp1, jp2, jp3 As Newtonsoft.Json.Linq.JObject
         Dim ja As Newtonsoft.Json.Linq.JArray
         Dim dr As DataRow
-        Dim iShares As Integer
+        Dim iShares As UInt64
         Dim dTemp As Date
         Dim pd As clsPoolData
         Dim dHashTemp As Double
@@ -2875,7 +2854,7 @@ Public Class frmMain
 
         Dim j, jp1, jp2 As Newtonsoft.Json.Linq.JObject
         Dim dr As DataRow
-        Dim iShares As Integer
+        Dim iShares As UInt64
         Dim pd As clsPoolData
         Dim dHashRate As Double
         Dim bDebugPoint As Byte
@@ -3237,7 +3216,7 @@ Public Class frmMain
 
         Dim j, jp1, jp2 As Newtonsoft.Json.Linq.JObject
         Dim dr As DataRow
-        Dim iShares As Integer
+        Dim iShares As UInt64
         Dim pd As clsPoolData
         Dim dHashTemp As Double
         Dim bDebugPoint As Byte
@@ -3555,7 +3534,7 @@ Public Class frmMain
                                 dbRatio = 10 / ((j2.Value(Of UInt32)("time") - iBlockChangeTime) / 60 / iBlocksSinceLastChange)
 
                                 Me.txtBCI_EstimatedNextDifficulty.Text = Format(dbRatio * Double.Parse(Me.txtBCI_Difficulty.Text), "###,###,###,###,###,###.##") & " (" & _
-                                    Format(dbRatio / 100, "##0.#%") & ")"
+                                    Format(dbRatio - 1, "##0.#%") & ")"
 
                                 Me.txtBCI_NextDifficultyChangeTime.Text = Format(Now.AddMinutes(Integer.Parse(Me.txtBCI_NextDifficultyChangeBlocks.Text) * Double.Parse(Me.txtBCI_MinsBetweenBlocks.Text)), "MM/dd/yyyy HH:mm:ss")
                             Next
@@ -3640,8 +3619,10 @@ Public Class frmMain
 
                 If sTemp = "ZERO" Then Exit Sub
 
-                Me.txtBCIc_Hashrate.Text = sTemp.Substring(0, sTemp.Length - 5)
-                Me.cmbBCIc_HashRate.Text = sTemp.Substring(sTemp.Length - 4)
+                If bByButton = False Then
+                    Me.txtBCIc_Hashrate.Text = sTemp.Substring(0, sTemp.Length - 5)
+                    Me.cmbBCIc_HashRate.Text = sTemp.Substring(sTemp.Length - 4)
+                End If
 
                 If String.IsNullOrEmpty(Me.txtBCIc_FeeDonation.Text) = True Then
                     Me.txtBCIc_FeeDonation.Text = "1"
@@ -3698,9 +3679,9 @@ Public Class frmMain
 
                     'got this far with no errors, save filled in fields if requested
                     If bByButton = True Then
-                        Call SetRegKeyByControl(Me.txtBCIc_Blocksize)
-                        Call SetRegKeyByControl(Me.txtBCIc_PeriodInDays)
-                        Call SetRegKeyByControl(Me.txtBCIc_FeeDonation)
+                        Call ctlsByKey.SetRegKeyByControl(Me.txtBCIc_Blocksize)
+                        Call ctlsByKey.SetRegKeyByControl(Me.txtBCIc_PeriodInDays)
+                        Call ctlsByKey.SetRegKeyByControl(Me.txtBCIc_FeeDonation)
                     End If
                 End If
             End If
@@ -3933,29 +3914,29 @@ Public Class frmMain
             .CurrentUser.CreateSubKey(csRegKey)
 
             'general
-            Call SetRegKeyByControl(Me.chkConfigStoreDBStatistics)
-            Call SetRegKeyByControl(Me.cmbConfigRefreshRate)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkConfigStoreDBStatistics)
+            Call ctlsByKey.SetRegKeyByControl(Me.cmbConfigRefreshRate)
 
             'idle
-            Call SetRegKeyByControl(Me.chkIdlePopup)
-            Call SetRegKeyByControl(Me.chkIdleStartApp)
-            Call SetRegKeyByControl(Me.chkIdleWorkPopUpWithBeeps)
-            Call SetRegKeyByControl(Me.chkIdleEMailAlerts)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkIdlePopup)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkIdleStartApp)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkIdleWorkPopUpWithBeeps)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkIdleEMailAlerts)
 
-            Call SetRegKeyByControl(Me.txtIdleStartAppName)
-            Call SetRegKeyByControl(Me.txtIdleStartParms)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtIdleStartAppName)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtIdleStartParms)
 
             'email notifications
-            Call SetRegKeyByControl(Me.txtSMTPServer)
-            Call SetRegKeyByControl(Me.txtSMTPPort)
-            Call SetRegKeyByControl(Me.txtSMTPUserName)
-            Call SetRegKeyByControl(Me.txtSMTPPassword)
-            Call SetRegKeyByControl(Me.txtSMTPAlertName)
-            Call SetRegKeyByControl(Me.txtSMTPAlertAddress)
-            Call SetRegKeyByControl(Me.txtSMTPAlertSubject)
-            Call SetRegKeyByControl(Me.txtSMTPFromAddress)
-            Call SetRegKeyByControl(Me.txtSMTPFromName)
-            Call SetRegKeyByControl(Me.chkSMTPSSL)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPServer)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPPort)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPUserName)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPPassword)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPAlertName)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPAlertAddress)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPAlertSubject)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPFromAddress)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSMTPFromName)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkSMTPSSL)
 
             If Me.chkIdleEMailAlerts.Checked = True Then
                 If String.IsNullOrEmpty(Me.txtSMTPServer.Text) = True OrElse String.IsNullOrEmpty(Me.txtSMTPPort.Text) = True OrElse String.IsNullOrEmpty(Me.txtSMTPUserName.Text) = True _
@@ -3973,62 +3954,62 @@ Public Class frmMain
             End If
 
             '50btc
-            Call SetRegKeyByControl(Me.chk50BTCEnabled)
-            Call SetRegKeyByControl(Me.txt50BTCAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chk50BTCEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txt50BTCAPIKey)
 
             'eclipse
-            Call SetRegKeyByControl(Me.chkEclipseEnabled)
-            Call SetRegKeyByControl(Me.txtEclipseAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkEclipseEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtEclipseAPIKey)
 
             'ozcoin
-            Call SetRegKeyByControl(chkOzcoinEnabled)
-            Call SetRegKeyByControl(Me.txtOzcoinAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(chkOzcoinEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtOzcoinAPIKey)
 
             'p2pool
-            Call SetRegKeyByControl(Me.chkP2PoolEnabled)
-            Call SetRegKeyByControl(Me.txtP2PoolURL)
-            Call SetRegKeyByControl(Me.txtP2PoolBTCAddy)
-            Call SetRegKeyByControl(Me.chkP2PoolScrypt)
-            Call SetRegKeyByControl(Me.chkP2PPublicPool)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkP2PoolEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtP2PoolURL)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtP2PoolBTCAddy)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkP2PoolScrypt)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkP2PPublicPool)
 
             'bitminter
-            Call SetRegKeyByControl(Me.chkBitMinterEnabled)
-            Call SetRegKeyByControl(Me.txtBitMinterAPIKey)
-            Call SetRegKeyByControl(Me.chkBitMinterShowWorkerCheckPoint)
-            Call SetRegKeyByControl(Me.chkBitMinterShowWorkerTotals)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkBitMinterEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtBitMinterAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkBitMinterShowWorkerCheckPoint)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkBitMinterShowWorkerTotals)
 
             'btcguild
-            Call SetRegKeyByControl(Me.chkBTCGuildEnabled)
-            Call SetRegKeyByControl(Me.txtBTCGuildAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkBTCGuildEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtBTCGuildAPIKey)
 
             'slush
-            Call SetRegKeyByControl(Me.chkSlushEnabled)
-            Call SetRegKeyByControl(Me.txtSlushAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkSlushEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtSlushAPIKey)
 
             'multipool
-            Call SetRegKeyByControl(Me.chkMultipoolEnabled)
-            Call SetRegKeyByControl(Me.txtMultipoolAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkMultipoolEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtMultipoolAPIKey)
 
             'blockchain.info
-            Call SetRegKeyByControl(Me.chkBlockChainInfoEnabled)
-            Call SetRegKeyByControl(Me.cmbBlockChainInfoRefreshRate)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkBlockChainInfoEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.cmbBlockChainInfoRefreshRate)
 
             'scryptguild
-            Call SetRegKeyByControl(Me.chkScryptGuildEnabled)
-            Call SetRegKeyByControl(Me.chkScryptGuildShowBalanceData)
-            Call SetRegKeyByControl(Me.chkScryptGuildShowWorkerData)
-            Call SetRegKeyByControl(Me.txtScryptGuildAPIKey)
-            Call SetRegKeyByControl(Me.chkScryptGuildOmitTinyBalances)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildShowBalanceData)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildShowWorkerData)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtScryptGuildAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildOmitTinyBalances)
 
             'eligius
-            Call SetRegKeyByControl(Me.chkEligiusEnabled)
-            Call SetRegKeyByControl(Me.txtEligiusBTCAddress)
-            Call SetRegKeyByControl(Me.txtEligiusBTCAddy2)
-            Call SetRegKeyByControl(Me.txtEligiusBTCAddy3)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkEligiusEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtEligiusBTCAddress)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtEligiusBTCAddy2)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtEligiusBTCAddy3)
 
             'ltcrabbit
-            Call SetRegKeyByControl(Me.chkLTCRabbitEnabled)
-            Call SetRegKeyByControl(Me.txtLTCRabbitAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.chkLTCRabbitEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtLTCRabbitAPIKey)
         End With
 
         If bRunning = False AndAlso (ValidatePool(enPool.eclipse1) = True OrElse ValidatePool(enPool.f50btc) = True OrElse ValidatePool(enPool.ozcoin) = True _
@@ -4038,46 +4019,6 @@ Public Class frmMain
             Me.tabsShown.SelectTab(0)
 
             Me.timer_start.Enabled = True
-        End If
-
-    End Sub
-
-    Private Sub SetRegKeyByControl(ByRef chkAny As CheckBox)
-
-        Dim sKeyname As String
-
-        If dictRegkeyNames.TryGetValue(chkAny.Name, sKeyname) = True Then
-            If chkAny.Checked = True Then
-                My.Computer.Registry.SetValue("HKEY_CURRENT_USER\" & csRegKey, sKeyname, "Y", Microsoft.Win32.RegistryValueKind.String)
-            Else
-                My.Computer.Registry.SetValue("HKEY_CURRENT_USER\" & csRegKey, sKeyname, "N", Microsoft.Win32.RegistryValueKind.String)
-            End If
-        Else
-            Throw New Exception("Internal error: " & chkAny.Name & " not found in regKey dictionary.")
-        End If
-
-    End Sub
-
-    Private Sub SetRegKeyByControl(ByRef txtAny As TextBox)
-
-        _SetRegKeyByControl(txtAny)
-
-    End Sub
-
-    Private Sub SetRegKeyByControl(ByRef cmbAny As ComboBox)
-
-        _SetRegKeyByControl(cmbAny)
-
-    End Sub
-
-    Private Sub _SetRegKeyByControl(ByRef ctlAny As Control)
-
-        Dim sKeyname As String
-
-        If dictRegkeyNames.TryGetValue(ctlAny.Name, sKeyname) = True Then
-            My.Computer.Registry.SetValue("HKEY_CURRENT_USER\" & csRegKey, sKeyname, ctlAny.Text, Microsoft.Win32.RegistryValueKind.String)
-        Else
-            Throw New Exception("Internal error: " & ctlAny.Name & " not found in regKey dictionary.")
         End If
 
     End Sub

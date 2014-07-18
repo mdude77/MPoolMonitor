@@ -2315,7 +2315,7 @@ Partial Class frmMain
         Me.dataMultiWorkerData.ReadOnly = True
         Me.dataMultiWorkerData.RowHeadersVisible = False
         Me.dataMultiWorkerData.RowTemplate.Height = 24
-        Me.dataMultiWorkerData.Size = New System.Drawing.Size(640, 380)
+        Me.dataMultiWorkerData.Size = New System.Drawing.Size(644, 380)
         Me.dataMultiWorkerData.TabIndex = 99
         '
         'tabCoinData
@@ -2342,7 +2342,7 @@ Partial Class frmMain
         Me.dataMultiCoinData.ReadOnly = True
         Me.dataMultiCoinData.RowHeadersVisible = False
         Me.dataMultiCoinData.RowTemplate.Height = 24
-        Me.dataMultiCoinData.Size = New System.Drawing.Size(640, 380)
+        Me.dataMultiCoinData.Size = New System.Drawing.Size(644, 380)
         Me.dataMultiCoinData.TabIndex = 98
         '
         'TextBox8
@@ -2781,7 +2781,7 @@ Partial Class frmMain
         Me.dataScryptGuildWorkerData.ReadOnly = True
         Me.dataScryptGuildWorkerData.RowHeadersVisible = False
         Me.dataScryptGuildWorkerData.RowTemplate.Height = 24
-        Me.dataScryptGuildWorkerData.Size = New System.Drawing.Size(640, 380)
+        Me.dataScryptGuildWorkerData.Size = New System.Drawing.Size(644, 380)
         Me.dataScryptGuildWorkerData.TabIndex = 99
         '
         'tabBalances
@@ -2808,7 +2808,7 @@ Partial Class frmMain
         Me.dataScryptGuildBalanceData.ReadOnly = True
         Me.dataScryptGuildBalanceData.RowHeadersVisible = False
         Me.dataScryptGuildBalanceData.RowTemplate.Height = 24
-        Me.dataScryptGuildBalanceData.Size = New System.Drawing.Size(640, 380)
+        Me.dataScryptGuildBalanceData.Size = New System.Drawing.Size(644, 380)
         Me.dataScryptGuildBalanceData.TabIndex = 98
         '
         'tabSlush
@@ -3660,7 +3660,7 @@ Partial Class frmMain
         Me.TabControl2.Multiline = True
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(681, 327)
+        Me.TabControl2.Size = New System.Drawing.Size(693, 327)
         Me.TabControl2.TabIndex = 58
         '
         'tabIdleUserProcess
@@ -3674,7 +3674,7 @@ Partial Class frmMain
         Me.tabIdleUserProcess.Location = New System.Drawing.Point(29, 4)
         Me.tabIdleUserProcess.Name = "tabIdleUserProcess"
         Me.tabIdleUserProcess.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabIdleUserProcess.Size = New System.Drawing.Size(648, 319)
+        Me.tabIdleUserProcess.Size = New System.Drawing.Size(660, 319)
         Me.tabIdleUserProcess.TabIndex = 1
         Me.tabIdleUserProcess.Text = "Start app"
         Me.tabIdleUserProcess.UseVisualStyleBackColor = True
@@ -3762,7 +3762,7 @@ Partial Class frmMain
         Me.tabIdleEmail.Location = New System.Drawing.Point(29, 4)
         Me.tabIdleEmail.Name = "tabIdleEmail"
         Me.tabIdleEmail.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabIdleEmail.Size = New System.Drawing.Size(648, 319)
+        Me.tabIdleEmail.Size = New System.Drawing.Size(660, 319)
         Me.tabIdleEmail.TabIndex = 0
         Me.tabIdleEmail.Text = "EMail"
         Me.tabIdleEmail.UseVisualStyleBackColor = True
@@ -4146,7 +4146,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmMain"
-        Me.Text = "M's Pool Monitor v3.9"
+        Me.Text = "M's Pool Monitor v4.0"
         Me.tabsShown.ResumeLayout(False)
         Me.tab50BTC.ResumeLayout(False)
         Me.tab50BTC.PerformLayout()

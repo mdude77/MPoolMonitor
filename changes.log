@@ -1,3 +1,9 @@
+v4.0
+- Changed the variable used to hold total shares from signed 32-bit int to unsigned 64-bit to stop an overflow in share count with large numbers.
+
+v3.9
+- Fixed the difficulty percentage change calculation for blockchain.info
+
 v3.8
 - The eligius BTC ratings work again if you have less than 3 addresses
 - Fixed a few small minor problems with the BTC per hashrate estimator
