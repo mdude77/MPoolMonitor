@@ -52,7 +52,7 @@ Public Class frmMain
         Public chkEnabled As CheckBox
     End Class
 
-    Private PoolData(0 To 26) As clsPoolData
+    Private PoolData(0 To 27) As clsPoolData
 
     Private Enum enPool
         f50btc = 0
@@ -70,8 +70,8 @@ Public Class frmMain
         multipool1 = 12
         multipool2 = 13
         blockchaininfo = 14
-        scryptguild1 = 15
-        scryptguild2 = 16
+        ckpool1 = 15
+        ckpool2 = 16
         eligius1 = 17
         eligius2 = 18
         eligius3 = 19
@@ -259,13 +259,11 @@ Public Class frmMain
             .AddControl(Me.txtBCIc_PeriodInDays, "Blockchain.infoCalcPeriodInDays")
             .AddControl(Me.txtBCIc_FeeDonation, "Blockchain.infoCalcFeeDonation")
 
-            'scryptguild
-            .AddControl(Me.chkScryptGuildEnabled, "ScryptGuildEnabled")
-            .AddControl(Me.chkScryptGuildShowBalanceData, "ScryptGuildShowBalanceData")
-            .AddControl(Me.chkScryptGuildShowWorkerData, "ScryptGuildShowWorkerData")
-            .AddControl(Me.txtScryptGuildAPIKey, "ScryptGuildAPIKey")
-            .AddControl(Me.chkScryptGuildOmitTinyBalances, "ScryptGuildOmitTinyBalances")
-
+            'ckpool
+            .AddControl(Me.chkCKPoolEnabled, "CKPoolEnabled")
+            .AddControl(Me.txtCKPoolAPIKey, "CKPoolAPIKey")
+            .AddControl(Me.txtCKPoolUserID, "CKPoolUserID")
+            
             'eligius
             .AddControl(Me.chkEligiusEnabled, "EligiusEnabled")
             .AddControl(Me.txtEligiusBTCAddress, "EligiusBTCAddress")
@@ -365,13 +363,11 @@ Public Class frmMain
             Call ctlsByKey.SetControlByRegKey(key, Me.txtBCIc_PeriodInDays)
             Call ctlsByKey.SetControlByRegKey(key, Me.txtBCIc_FeeDonation)
 
-            'scryptguild
-            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildEnabled)
-            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildShowBalanceData, True)
-            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildShowWorkerData, True)
-            Call ctlsByKey.SetControlByRegKey(key, Me.txtScryptGuildAPIKey)
-            Call ctlsByKey.SetControlByRegKey(key, Me.chkScryptGuildOmitTinyBalances, True)
-
+            'ckpool
+            Call ctlsByKey.SetControlByRegKey(key, Me.chkCKPoolEnabled)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtCKPoolAPIKey)
+            Call ctlsByKey.SetControlByRegKey(key, Me.txtCKPoolUserID)
+            
             'eligius
             Call ctlsByKey.SetControlByRegKey(key, Me.chkEligiusEnabled)
             Call ctlsByKey.SetControlByRegKey(key, Me.txtEligiusBTCAddress)
@@ -427,7 +423,7 @@ Public Class frmMain
             bOnePoolSet = True
         ElseIf ValidatePool(enPool.blockchaininfo) = True Then
             bOnePoolSet = True
-        ElseIf ValidatePool(enPool.scryptguild1) = True Then
+        ElseIf ValidatePool(enPool.ckpool1) = True Then
             bOnePoolSet = True
         ElseIf ValidatePool(enPool.eligius1) = True Then
             bOnePoolSet = True
@@ -806,54 +802,32 @@ Public Class frmMain
                     Case enPool.p2pool2, enPool.p2pool3, enPool.p2pool4
                         .sPoolName = "p2pool"
 
-                    Case enPool.scryptguild1 'balance data
-                        .sPoolName = "ScryptGuild"
-
-                        With .ds.Tables(0)
-                            .Columns.Add("Coin")
-                            .Columns.Add("Balance")
-                        End With
-
-                        With Me.dataMultiCoinData
-                            .Columns(0).Width = 63
-                            .Columns(1).Width = 145
-                        End With
-
-                        Me.dataScryptGuildBalanceData.DataSource = .ds.Tables(0)
-
-                        Call SetGridSizes("\Columns\dataScryptGuildBalanceData", Me.dataScryptGuildBalanceData)
-
-                        AddHandler Me.dataScryptGuildBalanceData.ColumnWidthChanged, AddressOf Me.dataGrid_ColumnWidthChanged
-
-                        .sTabName = "tabScryptGuild"
-                        .sTabLabel = "ScryptGuild"
-                        Call HideTab(x)
-
-                        .chkEnabled = Me.chkScryptGuildEnabled
-                        AddHandler .chkEnabled.CheckedChanged, AddressOf Me.TabEnabled_CheckedChanged
-
-                    Case enPool.scryptguild2 'worker data
-                        .sPoolName = "ScryptGuild"
+                    Case enPool.ckpool1 'worker data
+                        .sPoolName = "CKPool"
 
                         With .ds.Tables(0)
                             .Columns.Add("Worker")
-                            .Columns.Add("Hashrate/Avg")
-                            .Columns.Add("Shares/Stales/Dupe/Unknown")
-                            .Columns.Add("Bad")
+                            .Columns.Add("Hashrate 5min/1hr/24hr")
+                            .Columns.Add("Diff")
+                            .Columns.Add("Shares")
+                            .Columns.Add("Inv/Stale/Dup/Low/Rej")
                         End With
 
-                        Me.dataScryptGuildWorkerData.DataSource = .ds.Tables(0)
+                        Me.dataCKPool.DataSource = .ds.Tables(0)
 
-                        With Me.dataBTCGuild
-                            .Columns(0).Width = 158
-                            .Columns(1).Width = 209
-                            .Columns(2).Width = 261
-                            .Columns(3).Width = 68
-                        End With
+                        Call SetGridSizes("\Columns\dataCKPool", Me.dataCKPool)
 
-                        Call SetGridSizes("\Columns\dataScryptGuildWorkerData", Me.dataScryptGuildWorkerData)
+                        AddHandler Me.dataCKPool.ColumnWidthChanged, AddressOf Me.dataGrid_ColumnWidthChanged
 
-                        AddHandler Me.dataScryptGuildWorkerData.ColumnWidthChanged, AddressOf Me.dataGrid_ColumnWidthChanged
+                        .sTabName = "tabCKPool"
+                        .sTabLabel = "CKPool"
+                        Call HideTab(x)
+
+                        .chkEnabled = Me.chkCKPoolEnabled
+                        AddHandler .chkEnabled.CheckedChanged, AddressOf Me.TabEnabled_CheckedChanged
+
+                    Case enPool.ckpool2 'pool data
+                        .sPoolName = "CKPool"
 
                     Case enPool.slush
                         .sPoolName = "Slush's Pool"
@@ -892,7 +866,7 @@ Public Class frmMain
 
     End Sub
 
-    
+
 
     Private Sub SetGridSizes(ByVal sKey As String, ByRef dataGrid As DataGridView)
 
@@ -1085,8 +1059,8 @@ Public Class frmMain
                 Case enPool.blockchaininfo, enPool.blockchaininfo2, enPool.blockchaininfo3
                     Call HandleBlockChainInfo(sJSONText, CurrentPool)
 
-                Case enPool.scryptguild1
-                    Call HandleScryptGuild(sJSONText)
+                Case enPool.ckpool1, enPool.ckpool2
+                    Call HandleCKPool(sJSONText, CurrentPool)
 
                 Case enPool.eligius1, enPool.eligius2, enPool.eligius3, enPool.eligius4, enPool.eligius5, enPool.eligius6
                     Call HandleEligius(sJSONText, CurrentPool)
@@ -2444,6 +2418,10 @@ Public Class frmMain
 
                         iShares = Val(jp1.Value(Of String)("total"))
 
+                        If iShares < pd.iYourTotalShares Then
+                            pd.iYourTotalShares = 0
+                        End If
+
                         If Me.chkConfigStoreDBStatistics.Checked = True AndAlso pd.dLastShareTime <> #12:00:00 AM# Then
                             cmShareCounts.Parameters("@pool").Value = pd.sPoolName
                             cmShareCounts.Parameters("@Shares").Value = iShares - pd.iYourTotalShares
@@ -3018,196 +2996,283 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub HandleScryptGuild(ByVal sJSONText As String)
+    Private Sub HandleCKPool(ByVal sJSONText As String, ByVal pool As enPool)
 
-        Dim j, jp1, jp2 As Newtonsoft.Json.Linq.JObject
-        Dim ja As Newtonsoft.Json.Linq.JArray
+        Dim j As Newtonsoft.Json.Linq.JObject
         Dim dr As DataRow
-        Dim iTemp, iShares As UInt64
         Dim pd As clsPoolData
-        Dim dHashRate, dTemp As Double
         Dim bDebugPoint As Byte
-        Dim coinBalances, coinEarnings As Dictionary(Of String, Double)
+        Dim iShares As UInt64
 
         Try
-            If sJSONText.Substring(1) = "API key did not match any users." Then
-                Me.txtScryptGuildUserHash.Text = "CHECK API KEY"
-
-                Exit Sub
-            End If
-
-            If sJSONText.ToLower.Contains("you have made too many api requests recently") = True Then
-                Me.txtScryptGuildUserHash.Text = "15 SECONDS"
-                Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "API calls for ScryptGuild are limited to once every 15 seconds.")
-
-                Exit Sub
-            End If
-
-            Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "")
-
             j = Newtonsoft.Json.Linq.JObject.Parse(sJSONText)
-
-            Debug.Print("ScryptGuild: " & sJSONText)
 
             bDebugPoint = 1
 
-            'coin data
-            If Me.chkScryptGuildShowBalanceData.Checked = True Then
-                pd = PoolData(enPool.scryptguild1)
+            pd = PoolData(enPool.ckpool1)
 
-                pd.ds.Tables(0).Clear()
+            Select Case pool
+                Case enPool.ckpool1
+                    Me.txtCKPoolPoolHash1hr.Text = FormatHashRate(Val(j.Value(Of String)("p_hashrate1hr")) / 1000000)
+                    Me.txtCKPoolRoundDuration.Text = FormatTimeSpan(Format1970Date(j.Value(Of Integer)("lastblock")))
+                    Me.txtCKPoolUserHash5min.Text = FormatHashRate(Val(j.Value(Of String)("u_hashrate5m")) / 1000000)
+                    Me.txtCKPoolUserHash.Text = FormatHashRate(Val(j.Value(Of String)("u_hashrate1hr")) / 1000000)
 
-                coinBalances = New Dictionary(Of String, Double)
-                coinEarnings = New Dictionary(Of String, Double)
-
-                For Each jp1 In j.Property("balances").ToList
-                    For Each jp2 In jp1.Property("earnings").ToList
-                        For Each jp3 In jp2
-                            coinBalances.Add(jp3.Key, System.Convert.ChangeType(jp3.Value, GetType(Double)))
-                            coinEarnings.Add(jp3.Key, System.Convert.ChangeType(jp3.Value, GetType(Double)))
-                        Next
-                    Next
-
-                    For Each jp2 In jp1.Property("adjustments").ToList
-                        For Each jp3 In jp2
-                            coinBalances.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
-                            coinEarnings.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
-                        Next
-                    Next
-
-                    For Each jp2 In jp1.Property("conversions").ToList
-                        For Each jp3 In jp2
-                            coinBalances.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
-                            coinEarnings.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
-                        Next
-                    Next
-
-                    For Each jp2 In jp1.Property("payouts").ToList
-                        For Each jp3 In jp2
-                            coinBalances.Item(jp3.Key) -= System.Convert.ChangeType(jp3.Value, GetType(Double))
-                        Next
-                    Next
-                Next
-
-                For Each coin In coinBalances.Keys
-                    dr = pd.ds.Tables(0).NewRow
-
-                    dTemp = coinBalances.Item(coin)
-
-                    If coin = "btc" Then
-                        Me.txtScryptGuildConfirmedBTC.Text = Format(dTemp, "###,###,###,##0.##########")
+                    If j.Value(Of String)("u_hashrate1hr") IsNot Nothing AndAlso j.Value(Of String)("u_hashrate1hr") <> "?" Then
+                        pd.dSHA256TotalHashRate = Double.Parse(j.Value(Of String)("u_hashrate1hr")) / 1000000
+                    Else
+                        pd.dSHA256TotalHashRate = 0
                     End If
 
-                    If chkScryptGuildOmitTinyBalances.Checked = True AndAlso (dTemp = 0 OrElse dTemp < 0.0000000001) Then
-                        'don't show the coin
-                    Else
-                        dr.Item("Coin") = coin
-                        dr.Item("Balance") = Format(dTemp, "###,###,###,##0.##########")
+                    If Me.chkConfigStoreDBStatistics.Checked = True Then
+                        cmHashRates.Parameters("@Pool").Value = pd.sPoolName
+                        cmHashRates.Parameters("@HashType").Value = "User"
+                        cmHashRates.Parameters("@HashTotal").Value = pd.dSHA256TotalHashRate
+                        cmHashRates.ExecuteNonQuery()
+
+                        cmHashRates.Parameters("@Pool").Value = pd.sPoolName
+                        cmHashRates.Parameters("@HashType").Value = "Pool"
+                        cmHashRates.Parameters("@HashTotal").Value = Val(j.Value(Of String)("p_hashrate1hr")) / 1000000
+                        cmHashRates.ExecuteNonQuery()
+                    End If
+
+                Case enPool.ckpool2
+                    pd.ds.Tables(0).Clear()
+
+                    For x As Integer = 0 To Val(j.Value(Of String)("rows")) - 1
+                        dr = pd.ds.Tables(0).NewRow
+
+                        dr.Item("Worker") = j.Value(Of String)("workername:" & x)
+                        dr.Item("Hashrate 5min/1hr/24hr") = FormatHashRate(Val(j.Value(Of String)("w_hashrate5m:" & x) / 1000000)) & "/" & _
+                                                            FormatHashRate(Val(j.Value(Of String)("w_hashrate1hr:" & x) / 1000000)) & "/" & _
+                                                            FormatHashRate(Val(j.Value(Of String)("w_hashrate24hr:" & x) / 1000000))
+                        dr.Item("Diff") = j.Value(Of String)("w_lastdiff:" & x).Split(".")(0)
+                        dr.Item("Shares") = j.Value(Of String)("w_shareacc:" & x).Split(".")(0)
+                        dr.Item("Inv/Stale/Dup/Low/Rej") = j.Value(Of String)("w_shareinv:" & x).Split(".")(0) & "/" & _
+                                                           j.Value(Of String)("w_sharesta:" & x).Split(".")(0) & "/" & _
+                                                           j.Value(Of String)("w_sharedup:" & x).Split(".")(0) & "/" & _
+                                                           j.Value(Of String)("w_sharehi:" & x).Split(".")(0) & "/" & _
+                                                           j.Value(Of String)("w_sharerej:" & x).Split(".")(0)
 
                         pd.ds.Tables(0).Rows.Add(dr)
 
-                        If Me.chkConfigStoreDBStatistics.Checked = True Then
-                            cmPayout.Parameters("@pool").Value = pd.sPoolName & ":" & coin
-                            cmPayout.Parameters("@ConfirmedBTC").Value = dTemp
-                            cmPayout.Parameters("@UnconfirmedBTC").Value = DBNull.Value
-                            cmPayout.Parameters("@EstimatedBTC").Value = DBNull.Value
-                            cmPayout.Parameters("@PaidBTC").Value = coinEarnings.Item(coin)
-                            cmPayout.ExecuteNonQuery()
-                        End If
-                    End If
-                Next
-            End If
-
-            If Me.chkScryptGuildShowWorkerData.Checked = True Then
-                'now worker data
-                pd = PoolData(enPool.scryptguild2)
-
-                bDebugPoint = 1
-
-                pd.ds.Tables(0).Clear()
-
-                For Each ja In j.Property("worker_stats").ToList
-                    For Each jp1 In ja
-                        'blank row
-                        If pd.ds.Tables(0).Rows.Count <> 0 Then
-                            dr = pd.ds.Tables(0).NewRow
-                            pd.ds.Tables(0).Rows.Add(dr)
-                        End If
-
-                        dr = pd.ds.Tables(0).NewRow
-
-                        dr.Item("Worker") = jp1.Value(Of String)("worker_name")
-                        dr.Item("Hashrate/Avg") = FormatHashRate(jp1.Value(Of Double)("speed") / 1000) & " / " & _
-                            FormatHashRate(ProcessWorkerData(pd, jp1.Value(Of String)("worker_name"), jp1.Value(Of Double)("speed") / 1000))
-
-                        dHashRate += jp1.Value(Of Double)("speed") / 1000
-
-                        dr.Item("Shares/Stales/Dupe/Unknown") = jp1.Value(Of String)("valid") & " / " & jp1.Value(Of String)("stale") & " / " & _
-                            jp1.Value(Of String)("duplicate") & " / " & jp1.Value(Of String)("unknown")
-
-                        iTemp = jp1.Value(Of UInt64)("valid") + jp1.Value(Of UInt64)("stale") +
-                            jp1.Value(Of UInt64)("duplicate") + jp1.Value(Of UInt64)("unknown") + jp1.Value(Of UInt64)("lowdifficulty")
-
-                        If iTemp <> 0 Then
-                            dr.Item("Bad") = Format((iTemp - jp1.Value(Of UInt64)("valid")) / iTemp, "##0.##%")
-                        Else
-                            dr.Item("Bad") = "0.00%"
-                        End If
+                        iShares += Val(j.Value(Of String)("w_shareacc:" & x).Split(".")(0))
 
                         If Me.chkConfigStoreDBStatistics.Checked = True Then
-                            cmWorkHashRates.Parameters("@Pool").Value = pd.sPoolName
+                            cmWorkHashRates.Parameters("@Pool").Value = pd.sPoolName & ": 1 hour"
                             cmWorkHashRates.Parameters("@worker").Value = dr.Item("Worker")
-                            cmWorkHashRates.Parameters("@Hashrate").Value = jp1.Value(Of Double)("speed")
+                            cmWorkHashRates.Parameters("@Hashrate").Value = Val(j.Value(Of String)("w_hashrate1hr:" & x) / 1000000)
+                            cmWorkHashRates.ExecuteNonQuery()
+
+                            cmWorkHashRates.Parameters("@Pool").Value = pd.sPoolName & ": 5 mins"
+                            cmWorkHashRates.Parameters("@worker").Value = dr.Item("Worker")
+                            cmWorkHashRates.Parameters("@Hashrate").Value = Val(j.Value(Of String)("w_hashrate5m:" & x) / 1000000)
+                            cmWorkHashRates.ExecuteNonQuery()
+
+                            cmWorkHashRates.Parameters("@Pool").Value = pd.sPoolName & ": 24 hour"
+                            cmWorkHashRates.Parameters("@worker").Value = dr.Item("Worker")
+                            cmWorkHashRates.Parameters("@Hashrate").Value = Val(j.Value(Of String)("w_hashrate24hr:" & x) / 1000000)
                             cmWorkHashRates.ExecuteNonQuery()
                         End If
-
-                        pd.ds.Tables(0).Rows.Add(dr)
-
-                        iShares += jp1.Value(Of Double)("valid")
-
-                        'since reset
-                        dr = pd.ds.Tables(0).NewRow
-
-                        dr.Item("Worker") = "Since Reset"
-                        dr.Item("Hashrate/Avg") = ""
-                        dr.Item("Shares/Stales/Dupe/Unknown") = jp1.Value(Of String)("valid_reset") & " / " & jp1.Value(Of String)("stale_reset") & " / " & _
-                            jp1.Value(Of String)("dupe_reset") & " / " & jp1.Value(Of String)("unknown_reset")
-
-                        iTemp = jp1.Value(Of UInt64)("valid_reset") + jp1.Value(Of UInt64)("stale_reset") +
-                            jp1.Value(Of UInt64)("dupe_reset") + jp1.Value(Of UInt64)("unknown_reset") + jp1.Value(Of UInt64)("lowdiff_reset")
-
-                        If iTemp <> 0 Then
-                            dr.Item("Bad") = Format((iTemp - jp1.Value(Of UInt64)("valid_reset")) / iTemp, "##0.##%")
-                        Else
-                            dr.Item("Bad") = "0.00%"
-                        End If
-
-                        pd.ds.Tables(0).Rows.Add(dr)
                     Next
-                Next
 
-                If Me.chkConfigStoreDBStatistics.Checked = True AndAlso pd.dLastShareTime <> #12:00:00 AM# Then
-                    cmShareCounts.Parameters("@pool").Value = pd.sPoolName
-                    cmShareCounts.Parameters("@Shares").Value = iShares - pd.iYourTotalShares
-                    cmShareCounts.Parameters("@DurationInSeconds").Value = (Now - pd.dLastShareTime).TotalSeconds
-                    cmShareCounts.ExecuteNonQuery()
-                End If
+                    If Me.chkConfigStoreDBStatistics.Checked = True Then
+                        If pd.dLastShareTime <> #12:00:00 AM# Then
+                            cmShareCounts.Parameters("@pool").Value = pd.sPoolName
+                            cmShareCounts.Parameters("@Shares").Value = iShares - pd.iYourTotalShares
+                            cmShareCounts.Parameters("@DurationInSeconds").Value = (Now - pd.dLastShareTime).TotalSeconds
+                            cmShareCounts.ExecuteNonQuery()
+                        End If
+                    End If
 
-                pd.iYourTotalShares = iShares
-                pd.dLastShareTime = Now
-            End If
+                    pd.iYourTotalShares = iShares
+                    pd.dLastShareTime = Now
 
-            Me.txtScryptGuildUserHash.Text = FormatHashRate(dHashRate)
-            pd.dScryptTotalHashRate = dHashRate
+            End Select
 
             Call ShowTotalHashRate(False)
             Call CheckForIdleWorkers(pd)
 
-            Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "As of " & Now.ToString)
-        Catch ex As Exception When bErrorHandle = True
-            Me.txtScryptGuildUserHash.Text = "PJ:API ERROR"
+            Me.ToolTip1.SetToolTip(Me.txtCKPoolUserHash, "As of " & Now.ToString)
 
-            Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "An error occurred when processing the output from this pool.  This could indicate a problem with this application, or with the pool.")
+            '        If sJSONText.Substring(1) = "API key did not match any users." Then
+            '            Me.txtScryptGuildUserHash.Text = "CHECK API KEY"
+
+            '            Exit Sub
+            '        End If
+
+            '        If sJSONText.ToLower.Contains("you have made too many api requests recently") = True Then
+            '            Me.txtScryptGuildUserHash.Text = "15 SECONDS"
+            '            Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "API calls for ScryptGuild are limited to once every 15 seconds.")
+
+            '            Exit Sub
+            '        End If
+
+            '        Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "")
+
+
+
+            '        Debug.Print("ScryptGuild: " & sJSONText)
+
+            '        bDebugPoint = 1
+
+            '        'coin data
+            '        If Me.chkScryptGuildShowBalanceData.Checked = True Then
+            '            pd = PoolData(enPool.ckpool1)
+
+            '            pd.ds.Tables(0).Clear()
+
+            '            coinBalances = New Dictionary(Of String, Double)
+            '            coinEarnings = New Dictionary(Of String, Double)
+
+            '            For Each jp1 In j.Property("balances").ToList
+            '                For Each jp2 In jp1.Property("earnings").ToList
+            '                    For Each jp3 In jp2
+            '                        coinBalances.Add(jp3.Key, System.Convert.ChangeType(jp3.Value, GetType(Double)))
+            '                        coinEarnings.Add(jp3.Key, System.Convert.ChangeType(jp3.Value, GetType(Double)))
+            '                    Next
+            '                Next
+
+            '                For Each jp2 In jp1.Property("adjustments").ToList
+            '                    For Each jp3 In jp2
+            '                        coinBalances.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
+            '                        coinEarnings.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
+            '                    Next
+            '                Next
+
+            '                For Each jp2 In jp1.Property("conversions").ToList
+            '                    For Each jp3 In jp2
+            '                        coinBalances.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
+            '                        coinEarnings.Item(jp3.Key) += System.Convert.ChangeType(jp3.Value, GetType(Double))
+            '                    Next
+            '                Next
+
+            '                For Each jp2 In jp1.Property("payouts").ToList
+            '                    For Each jp3 In jp2
+            '                        coinBalances.Item(jp3.Key) -= System.Convert.ChangeType(jp3.Value, GetType(Double))
+            '                    Next
+            '                Next
+            '            Next
+
+            '            For Each coin In coinBalances.Keys
+            '                dr = pd.ds.Tables(0).NewRow
+
+            '                dTemp = coinBalances.Item(coin)
+
+            '                If coin = "btc" Then
+            '                    Me.txtScryptGuildConfirmedBTC.Text = Format(dTemp, "###,###,###,##0.##########")
+            '                End If
+
+            '                If chkScryptGuildOmitTinyBalances.Checked = True AndAlso (dTemp = 0 OrElse dTemp < 0.0000000001) Then
+            '                    'don't show the coin
+            '                Else
+            '                    dr.Item("Coin") = coin
+            '                    dr.Item("Balance") = Format(dTemp, "###,###,###,##0.##########")
+
+            '                    pd.ds.Tables(0).Rows.Add(dr)
+
+            '                    If Me.chkConfigStoreDBStatistics.Checked = True Then
+            '                        cmPayout.Parameters("@pool").Value = pd.sPoolName & ":" & coin
+            '                        cmPayout.Parameters("@ConfirmedBTC").Value = dTemp
+            '                        cmPayout.Parameters("@UnconfirmedBTC").Value = DBNull.Value
+            '                        cmPayout.Parameters("@EstimatedBTC").Value = DBNull.Value
+            '                        cmPayout.Parameters("@PaidBTC").Value = coinEarnings.Item(coin)
+            '                        cmPayout.ExecuteNonQuery()
+            '                    End If
+            '                End If
+            '            Next
+            '        End If
+
+            '        If Me.chkScryptGuildShowWorkerData.Checked = True Then
+            '            'now worker data
+            '            pd = PoolData(enPool.ckpool2)
+
+            '            bDebugPoint = 1
+
+            '            pd.ds.Tables(0).Clear()
+
+            '            For Each ja In j.Property("worker_stats").ToList
+            '                For Each jp1 In ja
+            '                    'blank row
+            '                    If pd.ds.Tables(0).Rows.Count <> 0 Then
+            '                        dr = pd.ds.Tables(0).NewRow
+            '                        pd.ds.Tables(0).Rows.Add(dr)
+            '                    End If
+
+            '                    dr = pd.ds.Tables(0).NewRow
+
+            '                    dr.Item("Worker") = jp1.Value(Of String)("worker_name")
+            '                    dr.Item("Hashrate/Avg") = FormatHashRate(jp1.Value(Of Double)("speed") / 1000) & " / " & _
+            '                        FormatHashRate(ProcessWorkerData(pd, jp1.Value(Of String)("worker_name"), jp1.Value(Of Double)("speed") / 1000))
+
+            '                    dHashRate += jp1.Value(Of Double)("speed") / 1000
+
+            '                    dr.Item("Shares/Stales/Dupe/Unknown") = jp1.Value(Of String)("valid") & " / " & jp1.Value(Of String)("stale") & " / " & _
+            '                        jp1.Value(Of String)("duplicate") & " / " & jp1.Value(Of String)("unknown")
+
+            '                    iTemp = jp1.Value(Of UInt64)("valid") + jp1.Value(Of UInt64)("stale") +
+            '                        jp1.Value(Of UInt64)("duplicate") + jp1.Value(Of UInt64)("unknown") + jp1.Value(Of UInt64)("lowdifficulty")
+
+            '                    If iTemp <> 0 Then
+            '                        dr.Item("Bad") = Format((iTemp - jp1.Value(Of UInt64)("valid")) / iTemp, "##0.##%")
+            '                    Else
+            '                        dr.Item("Bad") = "0.00%"
+            '                    End If
+
+            '                    If Me.chkConfigStoreDBStatistics.Checked = True Then
+            '                        cmWorkHashRates.Parameters("@Pool").Value = pd.sPoolName
+            '                        cmWorkHashRates.Parameters("@worker").Value = dr.Item("Worker")
+            '                        cmWorkHashRates.Parameters("@Hashrate").Value = jp1.Value(Of Double)("speed")
+            '                        cmWorkHashRates.ExecuteNonQuery()
+            '                    End If
+
+            '                    pd.ds.Tables(0).Rows.Add(dr)
+
+            '                    iShares += jp1.Value(Of Double)("valid")
+
+            '                    'since reset
+            '                    dr = pd.ds.Tables(0).NewRow
+
+            '                    dr.Item("Worker") = "Since Reset"
+            '                    dr.Item("Hashrate/Avg") = ""
+            '                    dr.Item("Shares/Stales/Dupe/Unknown") = jp1.Value(Of String)("valid_reset") & " / " & jp1.Value(Of String)("stale_reset") & " / " & _
+            '                        jp1.Value(Of String)("dupe_reset") & " / " & jp1.Value(Of String)("unknown_reset")
+
+            '                    iTemp = jp1.Value(Of UInt64)("valid_reset") + jp1.Value(Of UInt64)("stale_reset") +
+            '                        jp1.Value(Of UInt64)("dupe_reset") + jp1.Value(Of UInt64)("unknown_reset") + jp1.Value(Of UInt64)("lowdiff_reset")
+
+            '                    If iTemp <> 0 Then
+            '                        dr.Item("Bad") = Format((iTemp - jp1.Value(Of UInt64)("valid_reset")) / iTemp, "##0.##%")
+            '                    Else
+            '                        dr.Item("Bad") = "0.00%"
+            '                    End If
+
+            '                    pd.ds.Tables(0).Rows.Add(dr)
+            '                Next
+            '            Next
+
+            '            If Me.chkConfigStoreDBStatistics.Checked = True AndAlso pd.dLastShareTime <> #12:00:00 AM# Then
+            '                cmShareCounts.Parameters("@pool").Value = pd.sPoolName
+            '                cmShareCounts.Parameters("@Shares").Value = iShares - pd.iYourTotalShares
+            '                cmShareCounts.Parameters("@DurationInSeconds").Value = (Now - pd.dLastShareTime).TotalSeconds
+            '                cmShareCounts.ExecuteNonQuery()
+            '            End If
+
+            '            pd.iYourTotalShares = iShares
+            '            pd.dLastShareTime = Now
+            '        End If
+
+            '        Me.txtScryptGuildUserHash.Text = FormatHashRate(dHashRate)
+            '        pd.dScryptTotalHashRate = dHashRate
+
+            '        Call ShowTotalHashRate(False)
+            '        Call CheckForIdleWorkers(pd)
+
+            '        Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, "As of " & Now.ToString)
+        Catch ex As Exception When bErrorHandle = True
+            Me.txtCKPoolUserHash.Text = "PJ:API ERROR"
+
+            Me.ToolTip1.SetToolTip(Me.txtCKPoolUserHash, "An error occurred when processing the output from this pool.  This could indicate a problem with this application, or with the pool.")
         End Try
 
     End Sub
@@ -3528,15 +3593,23 @@ Public Class frmMain
 
                         For Each ja In j.Property("blocks").ToList
                             For Each j2 In ja
-                                Me.txtBCI_MinsBetweenBlocks.Text = Format((j2.Value(Of UInt32)("time") - iBlockChangeTime) / 60 / iBlocksSinceLastChange, "##.##")
+                                If iBlocksSinceLastChange >= 0 Then
+                                    Me.txtBCI_MinsBetweenBlocks.Text = Format((j2.Value(Of UInt32)("time") - iBlockChangeTime) / 60 / iBlocksSinceLastChange, "##.##")
 
-                                'supposed to be 10 mins between blocks
-                                dbRatio = 10 / ((j2.Value(Of UInt32)("time") - iBlockChangeTime) / 60 / iBlocksSinceLastChange)
+                                    'supposed to be 10 mins between blocks
+                                    dbRatio = 10 / ((j2.Value(Of UInt32)("time") - iBlockChangeTime) / 60 / iBlocksSinceLastChange)
 
-                                Me.txtBCI_EstimatedNextDifficulty.Text = Format(dbRatio * Double.Parse(Me.txtBCI_Difficulty.Text), "###,###,###,###,###,###.##") & " (" & _
-                                    Format(dbRatio - 1, "##0.#%") & ")"
+                                    Me.txtBCI_EstimatedNextDifficulty.Text = Format(dbRatio * Double.Parse(Me.txtBCI_Difficulty.Text), "###,###,###,###,###,###.##") & " (" & _
+                                        Format(dbRatio - 1, "##0.#%") & ")"
 
-                                Me.txtBCI_NextDifficultyChangeTime.Text = Format(Now.AddMinutes(Integer.Parse(Me.txtBCI_NextDifficultyChangeBlocks.Text) * Double.Parse(Me.txtBCI_MinsBetweenBlocks.Text)), "MM/dd/yyyy HH:mm:ss")
+                                    Me.txtBCI_NextDifficultyChangeTime.Text = Format(Now.AddMinutes(Integer.Parse(Me.txtBCI_NextDifficultyChangeBlocks.Text) * Double.Parse(Me.txtBCI_MinsBetweenBlocks.Text)), "MM/dd/yyyy HH:mm:ss")
+                                Else
+                                    Me.txtBCI_MinsBetweenBlocks.Text = "TBD - change or error just occurred"
+
+                                    'supposed to be 10 mins between blocks
+                                    Me.txtBCI_EstimatedNextDifficulty.Text = "TBD - change or error just occurred"
+                                    Me.txtBCI_NextDifficultyChangeTime.Text = "TBD - change or error just occurred"
+                                End If
                             Next
                         Next
 
@@ -3550,7 +3623,7 @@ Public Class frmMain
                     End Try
 
             End Select
-            
+
         Catch ex As Exception When bErrorHandle = True
             Select Case pool
                 Case enPool.blockchaininfo
@@ -3617,7 +3690,7 @@ Public Class frmMain
 
                 sTemp = FormatHashRate(dSHA256Total)
 
-                If sTemp = "ZERO" Then Exit Sub
+                If sTemp = "ZERO" Then sTemp = "0 TH/s"
 
                 If bByButton = False Then
                     Me.txtBCIc_Hashrate.Text = sTemp.Substring(0, sTemp.Length - 5)
@@ -3739,9 +3812,10 @@ Public Class frmMain
                     Return True
                 End If
 
-            Case enPool.scryptguild1
-                If Me.chkScryptGuildEnabled.Checked = True AndAlso String.IsNullOrEmpty(Me.txtScryptGuildAPIKey.Text) = False AndAlso _
-                    (Me.chkScryptGuildShowBalanceData.Checked = True OrElse Me.chkScryptGuildShowWorkerData.Checked = True) Then
+            Case enPool.ckpool1
+                If Me.chkCKPoolEnabled.Checked = True AndAlso String.IsNullOrEmpty(Me.txtCKPoolAPIKey.Text) = False AndAlso _
+                   Me.txtCKPoolUserID.Text.IsNullOrEmpty = False Then
+
                     Return True
                 End If
 
@@ -3994,12 +4068,10 @@ Public Class frmMain
             Call ctlsByKey.SetRegKeyByControl(Me.chkBlockChainInfoEnabled)
             Call ctlsByKey.SetRegKeyByControl(Me.cmbBlockChainInfoRefreshRate)
 
-            'scryptguild
-            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildEnabled)
-            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildShowBalanceData)
-            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildShowWorkerData)
-            Call ctlsByKey.SetRegKeyByControl(Me.txtScryptGuildAPIKey)
-            Call ctlsByKey.SetRegKeyByControl(Me.chkScryptGuildOmitTinyBalances)
+            'ckpool
+            Call ctlsByKey.SetRegKeyByControl(Me.chkCKPoolEnabled)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtCKPoolAPIKey)
+            Call ctlsByKey.SetRegKeyByControl(Me.txtCKPoolUserID)
 
             'eligius
             Call ctlsByKey.SetRegKeyByControl(Me.chkEligiusEnabled)
@@ -4015,7 +4087,7 @@ Public Class frmMain
         If bRunning = False AndAlso (ValidatePool(enPool.eclipse1) = True OrElse ValidatePool(enPool.f50btc) = True OrElse ValidatePool(enPool.ozcoin) = True _
                               OrElse ValidatePool(enPool.p2pool1) = True OrElse ValidatePool(enPool.bitminter1) = True OrElse ValidatePool(enPool.btcguild) = True _
                               OrElse ValidatePool(enPool.slush) = True OrElse ValidatePool(enPool.multipool1) = True OrElse ValidatePool(enPool.blockchaininfo) = True _
-                              OrElse ValidatePool(enPool.scryptguild1) = True OrElse ValidatePool(enPool.eligius1) = True OrElse ValidatePool(enPool.ltcrabbit1) = True) Then
+                              OrElse ValidatePool(enPool.ckpool1) = True OrElse ValidatePool(enPool.eligius1) = True OrElse ValidatePool(enPool.ltcrabbit1) = True) Then
             Me.tabsShown.SelectTab(0)
 
             Me.timer_start.Enabled = True
@@ -4082,10 +4154,10 @@ Public Class frmMain
             sbTemp.Append("MLTPL:" & Me.txtMultipoolUserHashRate.Text)
         End If
 
-        If ValidatePool(enPool.scryptguild1) = True Then
+        If ValidatePool(enPool.ckpool1) = True Then
             If sbTemp.Length <> 0 Then sbTemp.Append(vbCrLf)
 
-            sbTemp.Append("ScGd: " & Me.txtScryptGuildUserHash.Text)
+            sbTemp.Append("CKP: " & Me.txtCKPoolUserHash.Text)
         End If
 
         If ValidatePool(enPool.eligius1) = True Then
@@ -4288,9 +4360,9 @@ Public Class frmMain
                     Case enPool.blockchaininfo
                         Me.txtBCI_AsOfTimestamp.Text = "WC ERROR: " & e.Error.Message
 
-                    Case enPool.scryptguild1
-                        Me.txtScryptGuildUserHash.Text = "WC:API ERROR"
-                        Me.ToolTip1.SetToolTip(Me.txtScryptGuildUserHash, e.Error.Message)
+                    Case enPool.ckpool1
+                        Me.txtCKPoolUserHash.Text = "WC:API ERROR"
+                        Me.ToolTip1.SetToolTip(Me.txtCKPoolUserHash, e.Error.Message)
 
                     Case enPool.eligius1
                         Me.txtEligiusUserHash.Text = "WC:API ERROR1"
@@ -4443,21 +4515,16 @@ Public Class frmMain
                 wc.DownloadStringAsync(New System.Uri("http://api.multipool.us/api.php?api_key=" & Me.txtMultipoolAPIKey.Text), enPool.multipool1)
             End If
 
-            curPool = enPool.scryptguild1
+            curPool = enPool.ckpool1
 
-            If ValidatePool(enPool.scryptguild1) = True Then
+            If ValidatePool(enPool.ckpool1) = True Then
                 wc = New System.Net.WebClient
                 AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                wc.DownloadStringAsync(New System.Uri("https://www.kano.is/index.php?k=api&username=" & Me.txtCKPoolUserID.Text & "&api=" & Me.txtCKPoolAPIKey.Text & "&json=y"), enPool.ckpool1)
 
-                If Me.chkScryptGuildShowBalanceData.Checked = True AndAlso Me.chkScryptGuildShowWorkerData.Checked = True Then
-                    sTemp = "http://www.scryptguild.com/api.php?api_key=" & Me.txtScryptGuildAPIKey.Text & "&balances=all&workers=all"
-                ElseIf Me.chkScryptGuildShowBalanceData.Checked = True AndAlso Me.chkScryptGuildShowWorkerData.Checked = False Then
-                    sTemp = "http://www.scryptguild.com/api.php?api_key=" & Me.txtScryptGuildAPIKey.Text & "&balances=all"
-                ElseIf Me.chkScryptGuildShowBalanceData.Checked = False AndAlso Me.chkScryptGuildShowWorkerData.Checked = True Then
-                    sTemp = "http://www.scryptguild.com/api.php?api_key=" & Me.txtScryptGuildAPIKey.Text & "&workers=all"
-                End If
-
-                wc.DownloadStringAsync(New System.Uri(sTemp), enPool.scryptguild1)
+                wc = New System.Net.WebClient
+                AddHandler wc.DownloadStringCompleted, AddressOf Me.WebClientDownloadCompletedHandler
+                wc.DownloadStringAsync(New System.Uri("https://www.kano.is/index.php?k=api&username=" & Me.txtCKPoolUserID.Text & "&api=" & Me.txtCKPoolAPIKey.Text & "&json=y&work=y"), enPool.ckpool2)
             End If
 
             curPool = enPool.eligius1
@@ -4665,13 +4732,6 @@ Public Class frmMain
         Return x - 1
 
     End Function
-
-    Private Sub chkScryptGuildShowBalanceData_CheckedChanged(sender As Object, e As System.EventArgs) Handles chkScryptGuildShowBalanceData.CheckedChanged
-
-        Me.lblScryptGuildConfirmedBTC.Visible = Me.chkScryptGuildShowBalanceData.Checked
-        Me.txtScryptGuildConfirmedBTC.Visible = Me.chkScryptGuildShowBalanceData.Checked
-
-    End Sub
 
     Private Sub cmdIdleStartAppFinder_Click(sender As System.Object, e As System.EventArgs) Handles cmdIdleStartAppFinder.Click
 

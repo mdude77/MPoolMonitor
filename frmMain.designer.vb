@@ -118,6 +118,17 @@ Partial Class frmMain
         Me.txtBTCGuildPoolHashrate = New System.Windows.Forms.TextBox()
         Me.txtBTCGuildPendingBTCPayout = New System.Windows.Forms.TextBox()
         Me.txtBTCGuildPendingNMCPayout = New System.Windows.Forms.TextBox()
+        Me.tabCKPool = New System.Windows.Forms.TabPage()
+        Me.txtCKPoolPoolHash1hr = New System.Windows.Forms.TextBox()
+        Me.Label132 = New System.Windows.Forms.Label()
+        Me.txtCKPoolRoundDuration = New System.Windows.Forms.TextBox()
+        Me.Label133 = New System.Windows.Forms.Label()
+        Me.Label134 = New System.Windows.Forms.Label()
+        Me.txtCKPoolUserHash5min = New System.Windows.Forms.TextBox()
+        Me.lblScryptGuildConfirmedBTC = New System.Windows.Forms.Label()
+        Me.txtCKPoolEstimatedPayout = New System.Windows.Forms.TextBox()
+        Me.txtCKPoolUserHash = New System.Windows.Forms.TextBox()
+        Me.TextBox10 = New System.Windows.Forms.TextBox()
         Me.tabEclipse = New System.Windows.Forms.TabPage()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.Label35 = New System.Windows.Forms.Label()
@@ -246,16 +257,6 @@ Partial Class frmMain
         Me.Label56 = New System.Windows.Forms.Label()
         Me.txtP2pPoolHashRate = New System.Windows.Forms.TextBox()
         Me.txtP2pPayout = New System.Windows.Forms.TextBox()
-        Me.tabScryptGuild = New System.Windows.Forms.TabPage()
-        Me.lblScryptGuildConfirmedBTC = New System.Windows.Forms.Label()
-        Me.txtScryptGuildConfirmedBTC = New System.Windows.Forms.TextBox()
-        Me.txtScryptGuildUserHash = New System.Windows.Forms.TextBox()
-        Me.TextBox10 = New System.Windows.Forms.TextBox()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.tabWorkerInfo = New System.Windows.Forms.TabPage()
-        Me.dataScryptGuildWorkerData = New System.Windows.Forms.DataGridView()
-        Me.tabBalances = New System.Windows.Forms.TabPage()
-        Me.dataScryptGuildBalanceData = New System.Windows.Forms.DataGridView()
         Me.tabSlush = New System.Windows.Forms.TabPage()
         Me.TextBox6 = New System.Windows.Forms.TextBox()
         Me.Label79 = New System.Windows.Forms.Label()
@@ -289,6 +290,12 @@ Partial Class frmMain
         Me.chkBTCGuildEnabled = New System.Windows.Forms.CheckBox()
         Me.txtBTCGuildAPIKey = New System.Windows.Forms.TextBox()
         Me.Label61 = New System.Windows.Forms.Label()
+        Me.tabConfigureCKPool = New System.Windows.Forms.TabPage()
+        Me.txtCKPoolUserID = New System.Windows.Forms.TextBox()
+        Me.Label135 = New System.Windows.Forms.Label()
+        Me.chkCKPoolEnabled = New System.Windows.Forms.CheckBox()
+        Me.txtCKPoolAPIKey = New System.Windows.Forms.TextBox()
+        Me.Label15 = New System.Windows.Forms.Label()
         Me.tabConfigureEclipse = New System.Windows.Forms.TabPage()
         Me.chkEclipseEnabled = New System.Windows.Forms.CheckBox()
         Me.txtEclipseAPIKey = New System.Windows.Forms.TextBox()
@@ -322,13 +329,6 @@ Partial Class frmMain
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.chkP2PoolEnabled = New System.Windows.Forms.CheckBox()
-        Me.tabConfigureScryptGuild = New System.Windows.Forms.TabPage()
-        Me.chkScryptGuildOmitTinyBalances = New System.Windows.Forms.CheckBox()
-        Me.chkScryptGuildShowBalanceData = New System.Windows.Forms.CheckBox()
-        Me.chkScryptGuildShowWorkerData = New System.Windows.Forms.CheckBox()
-        Me.chkScryptGuildEnabled = New System.Windows.Forms.CheckBox()
-        Me.txtScryptGuildAPIKey = New System.Windows.Forms.TextBox()
-        Me.Label15 = New System.Windows.Forms.Label()
         Me.tabConfigureSlush = New System.Windows.Forms.TabPage()
         Me.chkSlushEnabled = New System.Windows.Forms.CheckBox()
         Me.txtSlushAPIKey = New System.Windows.Forms.TextBox()
@@ -389,6 +389,7 @@ Partial Class frmMain
         Me.cmdRefresh = New System.Windows.Forms.Button()
         Me.txtTotalHash = New System.Windows.Forms.TextBox()
         Me.timer_start = New System.Windows.Forms.Timer(Me.components)
+        Me.dataCKPool = New System.Windows.Forms.DataGridView()
         Me.tabsShown.SuspendLayout()
         Me.tab50BTC.SuspendLayout()
         CType(Me.data50btc, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -397,6 +398,7 @@ Partial Class frmMain
         Me.tabBlockchainInfo.SuspendLayout()
         Me.tabBTCGuild.SuspendLayout()
         CType(Me.dataBTCGuild, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tabCKPool.SuspendLayout()
         Me.tabEclipse.SuspendLayout()
         CType(Me.dataEclipse, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabEligius.SuspendLayout()
@@ -413,12 +415,6 @@ Partial Class frmMain
         CType(Me.dataMultiCoinData, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabP2pool.SuspendLayout()
         CType(Me.dataP2pool, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.tabScryptGuild.SuspendLayout()
-        Me.TabControl1.SuspendLayout()
-        Me.tabWorkerInfo.SuspendLayout()
-        CType(Me.dataScryptGuildWorkerData, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.tabBalances.SuspendLayout()
-        CType(Me.dataScryptGuildBalanceData, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSlush.SuspendLayout()
         CType(Me.dataSlush, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabConfigure.SuspendLayout()
@@ -428,19 +424,20 @@ Partial Class frmMain
         Me.tabConfigureBitMinter.SuspendLayout()
         Me.tabConfigBlockChainInfo.SuspendLayout()
         Me.tabConfigureBTCGuild.SuspendLayout()
+        Me.tabConfigureCKPool.SuspendLayout()
         Me.tabConfigureEclipse.SuspendLayout()
         Me.tabConfigureEligius.SuspendLayout()
         Me.tabConfigureLTCRabbit.SuspendLayout()
         Me.tabConfigureMultipool.SuspendLayout()
         Me.tabConfigureOzcoin.SuspendLayout()
         Me.tabConfigureP2Pool.SuspendLayout()
-        Me.tabConfigureScryptGuild.SuspendLayout()
         Me.tabConfigureSlush.SuspendLayout()
         Me.tabIdleWorkers.SuspendLayout()
         Me.TabControl2.SuspendLayout()
         Me.tabIdleUserProcess.SuspendLayout()
         Me.tabIdleEmail.SuspendLayout()
         Me.menuStripNotifyIcon.SuspendLayout()
+        CType(Me.dataCKPool, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'timer_CountDown
@@ -457,13 +454,13 @@ Partial Class frmMain
         Me.tabsShown.Controls.Add(Me.tabBitMinter)
         Me.tabsShown.Controls.Add(Me.tabBlockchainInfo)
         Me.tabsShown.Controls.Add(Me.tabBTCGuild)
+        Me.tabsShown.Controls.Add(Me.tabCKPool)
         Me.tabsShown.Controls.Add(Me.tabEclipse)
         Me.tabsShown.Controls.Add(Me.tabEligius)
         Me.tabsShown.Controls.Add(Me.tabOzcoin)
         Me.tabsShown.Controls.Add(Me.tabLTCRabbit)
         Me.tabsShown.Controls.Add(Me.tabMultipool)
         Me.tabsShown.Controls.Add(Me.tabP2pool)
-        Me.tabsShown.Controls.Add(Me.tabScryptGuild)
         Me.tabsShown.Controls.Add(Me.tabSlush)
         Me.tabsShown.Controls.Add(Me.tabConfigure)
         Me.tabsShown.Location = New System.Drawing.Point(2, 49)
@@ -497,7 +494,7 @@ Partial Class frmMain
         Me.txtPleaseSupport.Size = New System.Drawing.Size(614, 27)
         Me.txtPleaseSupport.TabIndex = 99
         Me.txtPleaseSupport.TabStop = False
-        Me.txtPleaseSupport.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.txtPleaseSupport.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'txt50UserHashRate
         '
@@ -617,7 +614,7 @@ Partial Class frmMain
         Me.TextBox1.Size = New System.Drawing.Size(614, 27)
         Me.TextBox1.TabIndex = 70
         Me.TextBox1.TabStop = False
-        Me.TextBox1.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox1.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'txtBitMinterNMCBalance
         '
@@ -1115,7 +1112,7 @@ Partial Class frmMain
         Me.TextBox9.Size = New System.Drawing.Size(618, 27)
         Me.TextBox9.TabIndex = 91
         Me.TextBox9.TabStop = False
-        Me.TextBox9.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox9.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'Label113
         '
@@ -1298,7 +1295,7 @@ Partial Class frmMain
         Me.TextBox2.Size = New System.Drawing.Size(614, 27)
         Me.TextBox2.TabIndex = 66
         Me.TextBox2.TabStop = False
-        Me.TextBox2.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox2.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'txtBTCGuildUserHash
         '
@@ -1378,6 +1375,117 @@ Partial Class frmMain
         Me.txtBTCGuildPendingNMCPayout.Size = New System.Drawing.Size(142, 27)
         Me.txtBTCGuildPendingNMCPayout.TabIndex = 51
         '
+        'tabCKPool
+        '
+        Me.tabCKPool.Controls.Add(Me.dataCKPool)
+        Me.tabCKPool.Controls.Add(Me.txtCKPoolPoolHash1hr)
+        Me.tabCKPool.Controls.Add(Me.Label132)
+        Me.tabCKPool.Controls.Add(Me.txtCKPoolRoundDuration)
+        Me.tabCKPool.Controls.Add(Me.Label133)
+        Me.tabCKPool.Controls.Add(Me.Label134)
+        Me.tabCKPool.Controls.Add(Me.txtCKPoolUserHash5min)
+        Me.tabCKPool.Controls.Add(Me.lblScryptGuildConfirmedBTC)
+        Me.tabCKPool.Controls.Add(Me.txtCKPoolEstimatedPayout)
+        Me.tabCKPool.Controls.Add(Me.txtCKPoolUserHash)
+        Me.tabCKPool.Controls.Add(Me.TextBox10)
+        Me.tabCKPool.Location = New System.Drawing.Point(4, 4)
+        Me.tabCKPool.Name = "tabCKPool"
+        Me.tabCKPool.Size = New System.Drawing.Size(665, 490)
+        Me.tabCKPool.TabIndex = 10
+        Me.tabCKPool.Text = "CKPool"
+        Me.tabCKPool.UseVisualStyleBackColor = True
+        '
+        'txtCKPoolPoolHash1hr
+        '
+        Me.txtCKPoolPoolHash1hr.Location = New System.Drawing.Point(160, 63)
+        Me.txtCKPoolPoolHash1hr.Name = "txtCKPoolPoolHash1hr"
+        Me.txtCKPoolPoolHash1hr.ReadOnly = True
+        Me.txtCKPoolPoolHash1hr.Size = New System.Drawing.Size(144, 27)
+        Me.txtCKPoolPoolHash1hr.TabIndex = 106
+        '
+        'Label132
+        '
+        Me.Label132.AutoSize = True
+        Me.Label132.Location = New System.Drawing.Point(311, 63)
+        Me.Label132.Name = "Label132"
+        Me.Label132.Size = New System.Drawing.Size(132, 20)
+        Me.Label132.TabIndex = 111
+        Me.Label132.Text = "User hash 5 min"
+        '
+        'txtCKPoolRoundDuration
+        '
+        Me.txtCKPoolRoundDuration.Location = New System.Drawing.Point(478, 30)
+        Me.txtCKPoolRoundDuration.Name = "txtCKPoolRoundDuration"
+        Me.txtCKPoolRoundDuration.ReadOnly = True
+        Me.txtCKPoolRoundDuration.Size = New System.Drawing.Size(144, 27)
+        Me.txtCKPoolRoundDuration.TabIndex = 108
+        '
+        'Label133
+        '
+        Me.Label133.AutoSize = True
+        Me.Label133.Location = New System.Drawing.Point(7, 63)
+        Me.Label133.Name = "Label133"
+        Me.Label133.Size = New System.Drawing.Size(135, 20)
+        Me.Label133.TabIndex = 109
+        Me.Label133.Text = "Pool hash 1 hour"
+        '
+        'Label134
+        '
+        Me.Label134.AutoSize = True
+        Me.Label134.Location = New System.Drawing.Point(311, 30)
+        Me.Label134.Name = "Label134"
+        Me.Label134.Size = New System.Drawing.Size(122, 20)
+        Me.Label134.TabIndex = 110
+        Me.Label134.Text = "Round duration"
+        '
+        'txtCKPoolUserHash5min
+        '
+        Me.txtCKPoolUserHash5min.Location = New System.Drawing.Point(478, 63)
+        Me.txtCKPoolUserHash5min.Name = "txtCKPoolUserHash5min"
+        Me.txtCKPoolUserHash5min.ReadOnly = True
+        Me.txtCKPoolUserHash5min.Size = New System.Drawing.Size(144, 27)
+        Me.txtCKPoolUserHash5min.TabIndex = 107
+        '
+        'lblScryptGuildConfirmedBTC
+        '
+        Me.lblScryptGuildConfirmedBTC.AutoSize = True
+        Me.lblScryptGuildConfirmedBTC.ForeColor = System.Drawing.Color.Red
+        Me.lblScryptGuildConfirmedBTC.Location = New System.Drawing.Point(311, 3)
+        Me.lblScryptGuildConfirmedBTC.Name = "lblScryptGuildConfirmedBTC"
+        Me.lblScryptGuildConfirmedBTC.Size = New System.Drawing.Size(138, 20)
+        Me.lblScryptGuildConfirmedBTC.TabIndex = 103
+        Me.lblScryptGuildConfirmedBTC.Text = "Estimated payout"
+        '
+        'txtCKPoolEstimatedPayout
+        '
+        Me.txtCKPoolEstimatedPayout.Location = New System.Drawing.Point(478, 3)
+        Me.txtCKPoolEstimatedPayout.Name = "txtCKPoolEstimatedPayout"
+        Me.txtCKPoolEstimatedPayout.ReadOnly = True
+        Me.txtCKPoolEstimatedPayout.Size = New System.Drawing.Size(144, 27)
+        Me.txtCKPoolEstimatedPayout.TabIndex = 104
+        Me.txtCKPoolEstimatedPayout.Text = "not currently avail"
+        '
+        'txtCKPoolUserHash
+        '
+        Me.txtCKPoolUserHash.Font = New System.Drawing.Font("Microsoft Sans Serif", 22.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCKPoolUserHash.Location = New System.Drawing.Point(10, 6)
+        Me.txtCKPoolUserHash.Name = "txtCKPoolUserHash"
+        Me.txtCKPoolUserHash.ReadOnly = True
+        Me.txtCKPoolUserHash.Size = New System.Drawing.Size(294, 49)
+        Me.txtCKPoolUserHash.TabIndex = 102
+        Me.txtCKPoolUserHash.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.txtCKPoolUserHash, "1 hour average")
+        '
+        'TextBox10
+        '
+        Me.TextBox10.Location = New System.Drawing.Point(8, 96)
+        Me.TextBox10.Name = "TextBox10"
+        Me.TextBox10.ReadOnly = True
+        Me.TextBox10.Size = New System.Drawing.Size(614, 27)
+        Me.TextBox10.TabIndex = 101
+        Me.TextBox10.TabStop = False
+        Me.TextBox10.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
+        '
         'tabEclipse
         '
         Me.tabEclipse.Controls.Add(Me.TextBox3)
@@ -1420,7 +1528,7 @@ Partial Class frmMain
         Me.TextBox3.Size = New System.Drawing.Size(614, 27)
         Me.TextBox3.TabIndex = 73
         Me.TextBox3.TabStop = False
-        Me.TextBox3.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox3.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'Label35
         '
@@ -1861,7 +1969,7 @@ Partial Class frmMain
         Me.TextBox11.Size = New System.Drawing.Size(614, 27)
         Me.TextBox11.TabIndex = 94
         Me.TextBox11.TabStop = False
-        Me.TextBox11.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox11.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'dataEligius
         '
@@ -1935,7 +2043,7 @@ Partial Class frmMain
         Me.TextBox4.Size = New System.Drawing.Size(614, 27)
         Me.TextBox4.TabIndex = 37
         Me.TextBox4.TabStop = False
-        Me.TextBox4.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox4.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'Label17
         '
@@ -2218,7 +2326,7 @@ Partial Class frmMain
         Me.TextBox12.Size = New System.Drawing.Size(614, 27)
         Me.TextBox12.TabIndex = 78
         Me.TextBox12.TabStop = False
-        Me.TextBox12.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox12.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'txtLTCRabbitUserHash
         '
@@ -2315,7 +2423,7 @@ Partial Class frmMain
         Me.dataMultiWorkerData.ReadOnly = True
         Me.dataMultiWorkerData.RowHeadersVisible = False
         Me.dataMultiWorkerData.RowTemplate.Height = 24
-        Me.dataMultiWorkerData.Size = New System.Drawing.Size(644, 380)
+        Me.dataMultiWorkerData.Size = New System.Drawing.Size(660, 380)
         Me.dataMultiWorkerData.TabIndex = 99
         '
         'tabCoinData
@@ -2342,7 +2450,7 @@ Partial Class frmMain
         Me.dataMultiCoinData.ReadOnly = True
         Me.dataMultiCoinData.RowHeadersVisible = False
         Me.dataMultiCoinData.RowTemplate.Height = 24
-        Me.dataMultiCoinData.Size = New System.Drawing.Size(644, 380)
+        Me.dataMultiCoinData.Size = New System.Drawing.Size(660, 380)
         Me.dataMultiCoinData.TabIndex = 98
         '
         'TextBox8
@@ -2353,7 +2461,7 @@ Partial Class frmMain
         Me.TextBox8.Size = New System.Drawing.Size(614, 27)
         Me.TextBox8.TabIndex = 97
         Me.TextBox8.TabStop = False
-        Me.TextBox8.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox8.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'txtMultipoolUserHashRate
         '
@@ -2414,7 +2522,7 @@ Partial Class frmMain
         Me.TextBox5.Size = New System.Drawing.Size(614, 27)
         Me.TextBox5.TabIndex = 91
         Me.TextBox5.TabStop = False
-        Me.TextBox5.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox5.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'txtP2PIdealPayout
         '
@@ -2690,127 +2798,6 @@ Partial Class frmMain
         Me.txtP2pPayout.Size = New System.Drawing.Size(144, 27)
         Me.txtP2pPayout.TabIndex = 1
         '
-        'tabScryptGuild
-        '
-        Me.tabScryptGuild.Controls.Add(Me.lblScryptGuildConfirmedBTC)
-        Me.tabScryptGuild.Controls.Add(Me.txtScryptGuildConfirmedBTC)
-        Me.tabScryptGuild.Controls.Add(Me.txtScryptGuildUserHash)
-        Me.tabScryptGuild.Controls.Add(Me.TextBox10)
-        Me.tabScryptGuild.Controls.Add(Me.TabControl1)
-        Me.tabScryptGuild.Location = New System.Drawing.Point(4, 4)
-        Me.tabScryptGuild.Name = "tabScryptGuild"
-        Me.tabScryptGuild.Size = New System.Drawing.Size(665, 490)
-        Me.tabScryptGuild.TabIndex = 10
-        Me.tabScryptGuild.Text = "ScryptGuild"
-        Me.tabScryptGuild.UseVisualStyleBackColor = True
-        '
-        'lblScryptGuildConfirmedBTC
-        '
-        Me.lblScryptGuildConfirmedBTC.AutoSize = True
-        Me.lblScryptGuildConfirmedBTC.ForeColor = System.Drawing.Color.Red
-        Me.lblScryptGuildConfirmedBTC.Location = New System.Drawing.Point(311, 3)
-        Me.lblScryptGuildConfirmedBTC.Name = "lblScryptGuildConfirmedBTC"
-        Me.lblScryptGuildConfirmedBTC.Size = New System.Drawing.Size(125, 20)
-        Me.lblScryptGuildConfirmedBTC.TabIndex = 103
-        Me.lblScryptGuildConfirmedBTC.Text = "Confirmed BTC"
-        '
-        'txtScryptGuildConfirmedBTC
-        '
-        Me.txtScryptGuildConfirmedBTC.Location = New System.Drawing.Point(478, 3)
-        Me.txtScryptGuildConfirmedBTC.Name = "txtScryptGuildConfirmedBTC"
-        Me.txtScryptGuildConfirmedBTC.ReadOnly = True
-        Me.txtScryptGuildConfirmedBTC.Size = New System.Drawing.Size(144, 27)
-        Me.txtScryptGuildConfirmedBTC.TabIndex = 104
-        '
-        'txtScryptGuildUserHash
-        '
-        Me.txtScryptGuildUserHash.Font = New System.Drawing.Font("Microsoft Sans Serif", 22.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtScryptGuildUserHash.Location = New System.Drawing.Point(10, 6)
-        Me.txtScryptGuildUserHash.Name = "txtScryptGuildUserHash"
-        Me.txtScryptGuildUserHash.ReadOnly = True
-        Me.txtScryptGuildUserHash.Size = New System.Drawing.Size(294, 49)
-        Me.txtScryptGuildUserHash.TabIndex = 102
-        Me.txtScryptGuildUserHash.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'TextBox10
-        '
-        Me.TextBox10.Location = New System.Drawing.Point(8, 65)
-        Me.TextBox10.Name = "TextBox10"
-        Me.TextBox10.ReadOnly = True
-        Me.TextBox10.Size = New System.Drawing.Size(614, 27)
-        Me.TextBox10.TabIndex = 101
-        Me.TextBox10.TabStop = False
-        Me.TextBox10.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
-        '
-        'TabControl1
-        '
-        Me.TabControl1.Alignment = System.Windows.Forms.TabAlignment.Right
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.tabWorkerInfo)
-        Me.TabControl1.Controls.Add(Me.tabBalances)
-        Me.TabControl1.Location = New System.Drawing.Point(3, 94)
-        Me.TabControl1.Multiline = True
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(658, 397)
-        Me.TabControl1.TabIndex = 100
-        '
-        'tabWorkerInfo
-        '
-        Me.tabWorkerInfo.Controls.Add(Me.dataScryptGuildWorkerData)
-        Me.tabWorkerInfo.Location = New System.Drawing.Point(4, 4)
-        Me.tabWorkerInfo.Name = "tabWorkerInfo"
-        Me.tabWorkerInfo.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWorkerInfo.Size = New System.Drawing.Size(625, 389)
-        Me.tabWorkerInfo.TabIndex = 1
-        Me.tabWorkerInfo.Text = "Worker Data"
-        Me.tabWorkerInfo.UseVisualStyleBackColor = True
-        '
-        'dataScryptGuildWorkerData
-        '
-        Me.dataScryptGuildWorkerData.AllowUserToAddRows = False
-        Me.dataScryptGuildWorkerData.AllowUserToDeleteRows = False
-        Me.dataScryptGuildWorkerData.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dataScryptGuildWorkerData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dataScryptGuildWorkerData.Location = New System.Drawing.Point(6, 4)
-        Me.dataScryptGuildWorkerData.Name = "dataScryptGuildWorkerData"
-        Me.dataScryptGuildWorkerData.ReadOnly = True
-        Me.dataScryptGuildWorkerData.RowHeadersVisible = False
-        Me.dataScryptGuildWorkerData.RowTemplate.Height = 24
-        Me.dataScryptGuildWorkerData.Size = New System.Drawing.Size(644, 380)
-        Me.dataScryptGuildWorkerData.TabIndex = 99
-        '
-        'tabBalances
-        '
-        Me.tabBalances.Controls.Add(Me.dataScryptGuildBalanceData)
-        Me.tabBalances.Location = New System.Drawing.Point(4, 4)
-        Me.tabBalances.Name = "tabBalances"
-        Me.tabBalances.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabBalances.Size = New System.Drawing.Size(625, 389)
-        Me.tabBalances.TabIndex = 0
-        Me.tabBalances.Text = "Balances"
-        Me.tabBalances.UseVisualStyleBackColor = True
-        '
-        'dataScryptGuildBalanceData
-        '
-        Me.dataScryptGuildBalanceData.AllowUserToAddRows = False
-        Me.dataScryptGuildBalanceData.AllowUserToDeleteRows = False
-        Me.dataScryptGuildBalanceData.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dataScryptGuildBalanceData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dataScryptGuildBalanceData.Location = New System.Drawing.Point(6, 6)
-        Me.dataScryptGuildBalanceData.Name = "dataScryptGuildBalanceData"
-        Me.dataScryptGuildBalanceData.ReadOnly = True
-        Me.dataScryptGuildBalanceData.RowHeadersVisible = False
-        Me.dataScryptGuildBalanceData.RowTemplate.Height = 24
-        Me.dataScryptGuildBalanceData.Size = New System.Drawing.Size(644, 380)
-        Me.dataScryptGuildBalanceData.TabIndex = 98
-        '
         'tabSlush
         '
         Me.tabSlush.Controls.Add(Me.TextBox6)
@@ -2837,7 +2824,7 @@ Partial Class frmMain
         Me.TextBox6.Size = New System.Drawing.Size(614, 27)
         Me.TextBox6.TabIndex = 80
         Me.TextBox6.TabStop = False
-        Me.TextBox6.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox6.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'Label79
         '
@@ -2942,12 +2929,12 @@ Partial Class frmMain
         '
         Me.menuStripMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuMainExit})
         Me.menuStripMain.Name = "menuStripMain"
-        Me.menuStripMain.Size = New System.Drawing.Size(103, 28)
+        Me.menuStripMain.Size = New System.Drawing.Size(108, 32)
         '
         'mnuMainExit
         '
         Me.mnuMainExit.Name = "mnuMainExit"
-        Me.mnuMainExit.Size = New System.Drawing.Size(102, 24)
+        Me.mnuMainExit.Size = New System.Drawing.Size(107, 28)
         Me.mnuMainExit.Text = "E&xit"
         '
         'TextBox7
@@ -2959,7 +2946,7 @@ Partial Class frmMain
         Me.TextBox7.Size = New System.Drawing.Size(618, 27)
         Me.TextBox7.TabIndex = 56
         Me.TextBox7.TabStop = False
-        Me.TextBox7.Text = "Please support this app: 1EARjDYEY2kKX6xwBuypEBs6BzPn4pWBku"
+        Me.TextBox7.Text = "Donations: 1BA8JrBParQCURrUUfxRusfXyU5NKfWAgn"
         '
         'tabConfiguration
         '
@@ -2971,13 +2958,13 @@ Partial Class frmMain
         Me.tabConfiguration.Controls.Add(Me.tabConfigureBitMinter)
         Me.tabConfiguration.Controls.Add(Me.tabConfigBlockChainInfo)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureBTCGuild)
+        Me.tabConfiguration.Controls.Add(Me.tabConfigureCKPool)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureEclipse)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureEligius)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureLTCRabbit)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureMultipool)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureOzcoin)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureP2Pool)
-        Me.tabConfiguration.Controls.Add(Me.tabConfigureScryptGuild)
         Me.tabConfiguration.Controls.Add(Me.tabConfigureSlush)
         Me.tabConfiguration.Controls.Add(Me.tabIdleWorkers)
         Me.tabConfiguration.Location = New System.Drawing.Point(7, 6)
@@ -3165,6 +3152,62 @@ Partial Class frmMain
         Me.Label61.Size = New System.Drawing.Size(73, 20)
         Me.Label61.TabIndex = 38
         Me.Label61.Text = "API Key:"
+        '
+        'tabConfigureCKPool
+        '
+        Me.tabConfigureCKPool.Controls.Add(Me.txtCKPoolUserID)
+        Me.tabConfigureCKPool.Controls.Add(Me.Label135)
+        Me.tabConfigureCKPool.Controls.Add(Me.chkCKPoolEnabled)
+        Me.tabConfigureCKPool.Controls.Add(Me.txtCKPoolAPIKey)
+        Me.tabConfigureCKPool.Controls.Add(Me.Label15)
+        Me.tabConfigureCKPool.Location = New System.Drawing.Point(4, 4)
+        Me.tabConfigureCKPool.Name = "tabConfigureCKPool"
+        Me.tabConfigureCKPool.Size = New System.Drawing.Size(543, 378)
+        Me.tabConfigureCKPool.TabIndex = 10
+        Me.tabConfigureCKPool.Text = "CKPool"
+        Me.tabConfigureCKPool.UseVisualStyleBackColor = True
+        '
+        'txtCKPoolUserID
+        '
+        Me.txtCKPoolUserID.Location = New System.Drawing.Point(85, 45)
+        Me.txtCKPoolUserID.Name = "txtCKPoolUserID"
+        Me.txtCKPoolUserID.Size = New System.Drawing.Size(444, 27)
+        Me.txtCKPoolUserID.TabIndex = 0
+        '
+        'Label135
+        '
+        Me.Label135.AutoSize = True
+        Me.Label135.Location = New System.Drawing.Point(6, 48)
+        Me.Label135.Name = "Label135"
+        Me.Label135.Size = New System.Drawing.Size(67, 20)
+        Me.Label135.TabIndex = 40
+        Me.Label135.Text = "UserID:"
+        '
+        'chkCKPoolEnabled
+        '
+        Me.chkCKPoolEnabled.AutoSize = True
+        Me.chkCKPoolEnabled.Location = New System.Drawing.Point(9, 6)
+        Me.chkCKPoolEnabled.Name = "chkCKPoolEnabled"
+        Me.chkCKPoolEnabled.Size = New System.Drawing.Size(91, 24)
+        Me.chkCKPoolEnabled.TabIndex = 36
+        Me.chkCKPoolEnabled.Text = "Enabled"
+        Me.chkCKPoolEnabled.UseVisualStyleBackColor = True
+        '
+        'txtCKPoolAPIKey
+        '
+        Me.txtCKPoolAPIKey.Location = New System.Drawing.Point(85, 78)
+        Me.txtCKPoolAPIKey.Name = "txtCKPoolAPIKey"
+        Me.txtCKPoolAPIKey.Size = New System.Drawing.Size(444, 27)
+        Me.txtCKPoolAPIKey.TabIndex = 1
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(6, 81)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(73, 20)
+        Me.Label15.TabIndex = 38
+        Me.Label15.Text = "API Key:"
         '
         'tabConfigureEclipse
         '
@@ -3485,83 +3528,6 @@ Partial Class frmMain
         Me.chkP2PoolEnabled.Text = "Enabled"
         Me.chkP2PoolEnabled.UseVisualStyleBackColor = True
         '
-        'tabConfigureScryptGuild
-        '
-        Me.tabConfigureScryptGuild.Controls.Add(Me.chkScryptGuildOmitTinyBalances)
-        Me.tabConfigureScryptGuild.Controls.Add(Me.chkScryptGuildShowBalanceData)
-        Me.tabConfigureScryptGuild.Controls.Add(Me.chkScryptGuildShowWorkerData)
-        Me.tabConfigureScryptGuild.Controls.Add(Me.chkScryptGuildEnabled)
-        Me.tabConfigureScryptGuild.Controls.Add(Me.txtScryptGuildAPIKey)
-        Me.tabConfigureScryptGuild.Controls.Add(Me.Label15)
-        Me.tabConfigureScryptGuild.Location = New System.Drawing.Point(4, 4)
-        Me.tabConfigureScryptGuild.Name = "tabConfigureScryptGuild"
-        Me.tabConfigureScryptGuild.Size = New System.Drawing.Size(543, 378)
-        Me.tabConfigureScryptGuild.TabIndex = 10
-        Me.tabConfigureScryptGuild.Text = "ScryptGuild"
-        Me.tabConfigureScryptGuild.UseVisualStyleBackColor = True
-        '
-        'chkScryptGuildOmitTinyBalances
-        '
-        Me.chkScryptGuildOmitTinyBalances.AutoSize = True
-        Me.chkScryptGuildOmitTinyBalances.Checked = True
-        Me.chkScryptGuildOmitTinyBalances.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkScryptGuildOmitTinyBalances.Location = New System.Drawing.Point(38, 136)
-        Me.chkScryptGuildOmitTinyBalances.Name = "chkScryptGuildOmitTinyBalances"
-        Me.chkScryptGuildOmitTinyBalances.Size = New System.Drawing.Size(240, 24)
-        Me.chkScryptGuildOmitTinyBalances.TabIndex = 49
-        Me.chkScryptGuildOmitTinyBalances.Text = "Omit zero and tiny balances"
-        Me.chkScryptGuildOmitTinyBalances.UseVisualStyleBackColor = True
-        '
-        'chkScryptGuildShowBalanceData
-        '
-        Me.chkScryptGuildShowBalanceData.AutoSize = True
-        Me.chkScryptGuildShowBalanceData.Checked = True
-        Me.chkScryptGuildShowBalanceData.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkScryptGuildShowBalanceData.Location = New System.Drawing.Point(10, 106)
-        Me.chkScryptGuildShowBalanceData.Name = "chkScryptGuildShowBalanceData"
-        Me.chkScryptGuildShowBalanceData.Size = New System.Drawing.Size(172, 24)
-        Me.chkScryptGuildShowBalanceData.TabIndex = 48
-        Me.chkScryptGuildShowBalanceData.Text = "Show balance data"
-        Me.chkScryptGuildShowBalanceData.UseVisualStyleBackColor = True
-        '
-        'chkScryptGuildShowWorkerData
-        '
-        Me.chkScryptGuildShowWorkerData.AutoSize = True
-        Me.chkScryptGuildShowWorkerData.Checked = True
-        Me.chkScryptGuildShowWorkerData.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkScryptGuildShowWorkerData.Location = New System.Drawing.Point(10, 76)
-        Me.chkScryptGuildShowWorkerData.Name = "chkScryptGuildShowWorkerData"
-        Me.chkScryptGuildShowWorkerData.Size = New System.Drawing.Size(164, 24)
-        Me.chkScryptGuildShowWorkerData.TabIndex = 47
-        Me.chkScryptGuildShowWorkerData.Text = "Show worker data"
-        Me.chkScryptGuildShowWorkerData.UseVisualStyleBackColor = True
-        '
-        'chkScryptGuildEnabled
-        '
-        Me.chkScryptGuildEnabled.AutoSize = True
-        Me.chkScryptGuildEnabled.Location = New System.Drawing.Point(9, 6)
-        Me.chkScryptGuildEnabled.Name = "chkScryptGuildEnabled"
-        Me.chkScryptGuildEnabled.Size = New System.Drawing.Size(91, 24)
-        Me.chkScryptGuildEnabled.TabIndex = 36
-        Me.chkScryptGuildEnabled.Text = "Enabled"
-        Me.chkScryptGuildEnabled.UseVisualStyleBackColor = True
-        '
-        'txtScryptGuildAPIKey
-        '
-        Me.txtScryptGuildAPIKey.Location = New System.Drawing.Point(85, 33)
-        Me.txtScryptGuildAPIKey.Name = "txtScryptGuildAPIKey"
-        Me.txtScryptGuildAPIKey.Size = New System.Drawing.Size(444, 27)
-        Me.txtScryptGuildAPIKey.TabIndex = 37
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(6, 36)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(73, 20)
-        Me.Label15.TabIndex = 38
-        Me.Label15.Text = "API Key:"
-        '
         'tabConfigureSlush
         '
         Me.tabConfigureSlush.Controls.Add(Me.chkSlushEnabled)
@@ -3660,7 +3626,7 @@ Partial Class frmMain
         Me.TabControl2.Multiline = True
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(693, 327)
+        Me.TabControl2.Size = New System.Drawing.Size(741, 327)
         Me.TabControl2.TabIndex = 58
         '
         'tabIdleUserProcess
@@ -3674,7 +3640,7 @@ Partial Class frmMain
         Me.tabIdleUserProcess.Location = New System.Drawing.Point(29, 4)
         Me.tabIdleUserProcess.Name = "tabIdleUserProcess"
         Me.tabIdleUserProcess.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabIdleUserProcess.Size = New System.Drawing.Size(660, 319)
+        Me.tabIdleUserProcess.Size = New System.Drawing.Size(708, 319)
         Me.tabIdleUserProcess.TabIndex = 1
         Me.tabIdleUserProcess.Text = "Start app"
         Me.tabIdleUserProcess.UseVisualStyleBackColor = True
@@ -3762,7 +3728,7 @@ Partial Class frmMain
         Me.tabIdleEmail.Location = New System.Drawing.Point(29, 4)
         Me.tabIdleEmail.Name = "tabIdleEmail"
         Me.tabIdleEmail.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabIdleEmail.Size = New System.Drawing.Size(660, 319)
+        Me.tabIdleEmail.Size = New System.Drawing.Size(708, 319)
         Me.tabIdleEmail.TabIndex = 0
         Me.tabIdleEmail.Text = "EMail"
         Me.tabIdleEmail.UseVisualStyleBackColor = True
@@ -4095,18 +4061,18 @@ Partial Class frmMain
         '
         Me.menuStripNotifyIcon.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuShow, Me.mnuExit})
         Me.menuStripNotifyIcon.Name = "ContextMenuStrip1"
-        Me.menuStripNotifyIcon.Size = New System.Drawing.Size(115, 52)
+        Me.menuStripNotifyIcon.Size = New System.Drawing.Size(122, 60)
         '
         'mnuShow
         '
         Me.mnuShow.Name = "mnuShow"
-        Me.mnuShow.Size = New System.Drawing.Size(114, 24)
+        Me.mnuShow.Size = New System.Drawing.Size(121, 28)
         Me.mnuShow.Text = "Show"
         '
         'mnuExit
         '
         Me.mnuExit.Name = "mnuExit"
-        Me.mnuExit.Size = New System.Drawing.Size(114, 24)
+        Me.mnuExit.Size = New System.Drawing.Size(121, 28)
         Me.mnuExit.Text = "Exit"
         '
         'cmdRefresh
@@ -4133,6 +4099,22 @@ Partial Class frmMain
         'timer_start
         '
         '
+        'dataCKPool
+        '
+        Me.dataCKPool.AllowUserToAddRows = False
+        Me.dataCKPool.AllowUserToDeleteRows = False
+        Me.dataCKPool.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dataCKPool.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dataCKPool.Location = New System.Drawing.Point(7, 129)
+        Me.dataCKPool.Name = "dataCKPool"
+        Me.dataCKPool.ReadOnly = True
+        Me.dataCKPool.RowHeadersVisible = False
+        Me.dataCKPool.RowTemplate.Height = 24
+        Me.dataCKPool.Size = New System.Drawing.Size(628, 358)
+        Me.dataCKPool.TabIndex = 112
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 20.0!)
@@ -4146,7 +4128,7 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "frmMain"
-        Me.Text = "M's Pool Monitor v4.0"
+        Me.Text = "M's Pool Monitor v4.1"
         Me.tabsShown.ResumeLayout(False)
         Me.tab50BTC.ResumeLayout(False)
         Me.tab50BTC.PerformLayout()
@@ -4159,6 +4141,8 @@ Partial Class frmMain
         Me.tabBTCGuild.ResumeLayout(False)
         Me.tabBTCGuild.PerformLayout()
         CType(Me.dataBTCGuild, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tabCKPool.ResumeLayout(False)
+        Me.tabCKPool.PerformLayout()
         Me.tabEclipse.ResumeLayout(False)
         Me.tabEclipse.PerformLayout()
         CType(Me.dataEclipse, System.ComponentModel.ISupportInitialize).EndInit()
@@ -4181,13 +4165,6 @@ Partial Class frmMain
         Me.tabP2pool.ResumeLayout(False)
         Me.tabP2pool.PerformLayout()
         CType(Me.dataP2pool, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.tabScryptGuild.ResumeLayout(False)
-        Me.tabScryptGuild.PerformLayout()
-        Me.TabControl1.ResumeLayout(False)
-        Me.tabWorkerInfo.ResumeLayout(False)
-        CType(Me.dataScryptGuildWorkerData, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.tabBalances.ResumeLayout(False)
-        CType(Me.dataScryptGuildBalanceData, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabSlush.ResumeLayout(False)
         Me.tabSlush.PerformLayout()
         CType(Me.dataSlush, System.ComponentModel.ISupportInitialize).EndInit()
@@ -4203,6 +4180,8 @@ Partial Class frmMain
         Me.tabConfigBlockChainInfo.PerformLayout()
         Me.tabConfigureBTCGuild.ResumeLayout(False)
         Me.tabConfigureBTCGuild.PerformLayout()
+        Me.tabConfigureCKPool.ResumeLayout(False)
+        Me.tabConfigureCKPool.PerformLayout()
         Me.tabConfigureEclipse.ResumeLayout(False)
         Me.tabConfigureEclipse.PerformLayout()
         Me.tabConfigureEligius.ResumeLayout(False)
@@ -4215,8 +4194,6 @@ Partial Class frmMain
         Me.tabConfigureOzcoin.PerformLayout()
         Me.tabConfigureP2Pool.ResumeLayout(False)
         Me.tabConfigureP2Pool.PerformLayout()
-        Me.tabConfigureScryptGuild.ResumeLayout(False)
-        Me.tabConfigureScryptGuild.PerformLayout()
         Me.tabConfigureSlush.ResumeLayout(False)
         Me.tabConfigureSlush.PerformLayout()
         Me.tabIdleWorkers.ResumeLayout(False)
@@ -4227,6 +4204,7 @@ Partial Class frmMain
         Me.tabIdleEmail.ResumeLayout(False)
         Me.tabIdleEmail.PerformLayout()
         Me.menuStripNotifyIcon.ResumeLayout(False)
+        CType(Me.dataCKPool, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4473,23 +4451,15 @@ Partial Class frmMain
     Friend WithEvents Label106 As System.Windows.Forms.Label
     Friend WithEvents cmbBlockChainInfoRefreshRate As System.Windows.Forms.ComboBox
     Friend WithEvents TextBox9 As System.Windows.Forms.TextBox
-    Friend WithEvents tabScryptGuild As System.Windows.Forms.TabPage
-    Friend WithEvents tabConfigureScryptGuild As System.Windows.Forms.TabPage
-    Friend WithEvents chkScryptGuildShowBalanceData As System.Windows.Forms.CheckBox
-    Friend WithEvents chkScryptGuildShowWorkerData As System.Windows.Forms.CheckBox
-    Friend WithEvents chkScryptGuildEnabled As System.Windows.Forms.CheckBox
-    Friend WithEvents txtScryptGuildAPIKey As System.Windows.Forms.TextBox
+    Friend WithEvents tabCKPool As System.Windows.Forms.TabPage
+    Friend WithEvents tabConfigureCKPool As System.Windows.Forms.TabPage
+    Friend WithEvents chkCKPoolEnabled As System.Windows.Forms.CheckBox
+    Friend WithEvents txtCKPoolAPIKey As System.Windows.Forms.TextBox
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents TextBox10 As System.Windows.Forms.TextBox
-    Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-    Friend WithEvents tabBalances As System.Windows.Forms.TabPage
-    Friend WithEvents dataScryptGuildBalanceData As System.Windows.Forms.DataGridView
-    Friend WithEvents tabWorkerInfo As System.Windows.Forms.TabPage
-    Friend WithEvents dataScryptGuildWorkerData As System.Windows.Forms.DataGridView
-    Friend WithEvents txtScryptGuildUserHash As System.Windows.Forms.TextBox
-    Friend WithEvents chkScryptGuildOmitTinyBalances As System.Windows.Forms.CheckBox
+    Friend WithEvents txtCKPoolUserHash As System.Windows.Forms.TextBox
     Friend WithEvents lblScryptGuildConfirmedBTC As System.Windows.Forms.Label
-    Friend WithEvents txtScryptGuildConfirmedBTC As System.Windows.Forms.TextBox
+    Friend WithEvents txtCKPoolEstimatedPayout As System.Windows.Forms.TextBox
     Friend WithEvents tabConfigureEligius As System.Windows.Forms.TabPage
     Friend WithEvents chkEligiusEnabled As System.Windows.Forms.CheckBox
     Friend WithEvents txtEligiusBTCAddress As System.Windows.Forms.TextBox
@@ -4596,5 +4566,14 @@ Partial Class frmMain
     Friend WithEvents Label131 As System.Windows.Forms.Label
     Friend WithEvents txtBCIc_MarketPrice As System.Windows.Forms.TextBox
     Friend WithEvents Label128 As System.Windows.Forms.Label
+    Friend WithEvents txtCKPoolPoolHash1hr As System.Windows.Forms.TextBox
+    Friend WithEvents Label132 As System.Windows.Forms.Label
+    Friend WithEvents txtCKPoolRoundDuration As System.Windows.Forms.TextBox
+    Friend WithEvents Label133 As System.Windows.Forms.Label
+    Friend WithEvents Label134 As System.Windows.Forms.Label
+    Friend WithEvents txtCKPoolUserHash5min As System.Windows.Forms.TextBox
+    Friend WithEvents txtCKPoolUserID As System.Windows.Forms.TextBox
+    Friend WithEvents Label135 As System.Windows.Forms.Label
+    Friend WithEvents dataCKPool As System.Windows.Forms.DataGridView
 
 End Class
